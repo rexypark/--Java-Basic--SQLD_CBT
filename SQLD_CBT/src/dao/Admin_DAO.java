@@ -1,4 +1,4 @@
-package com.mystudy.sqld_cbt;
+package dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -9,7 +9,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
-import dao.JDBC_Close;
 import vo.UserVO;
 
 

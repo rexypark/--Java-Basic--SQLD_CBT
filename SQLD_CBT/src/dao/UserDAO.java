@@ -207,7 +207,7 @@ public class UserDAO {
 	// LOG > true이면 userLog id, name, act(회원가입)
 	// 저장하면 result 1을 반환
 	// user정보를 입력 받아 
-	public boolean signUp(String user_id, String user_name, String user_pw, String user_phone, String user_email) {
+	public boolean signUp(String id, String name, String pw, String phone, String email) {
 		boolean signUpcmpt = false;
 		int result = 0;
 		try {
@@ -216,31 +216,32 @@ public class UserDAO {
 			
 			//SQL문장을 작성해서 Statement에 전달하고 sql문 실행 요청
 			StringBuilder sql = new StringBuilder();
-			sql.append("INSERT INTO USER_INFO");
-			sql.append("     (SELECT USER_ID, USER_NAME, USER_PW, USER_PHONE, USER_EMAIL,USER_SEQNUM) ");
-			sql.append("VALUES(?,?,?,?,?,SEQ_USER_INFO.NEXTVAL) "); 
+			sql.append("INSERT INTO USER_INFO ");
+			sql.append("VALUES(?,?,?,?,?,(SELECT NVL(MAX(USER_SEQNUM), 0) + 1 FROM USER_INFO)) "); 
+
 			pstmt = conn.prepareStatement(sql.toString());
-			System.out.println(user_id + " " + user_name + " " + user_pw + " " + user_phone + " " + user_email);
 			//?(Q바인딩변수)에 저장시키기
-			pstmt.setString(1, user_id);
-			pstmt.setString(2, user_name);
-			pstmt.setString(3, user_pw);
-			pstmt.setString(4, user_phone);
-			pstmt.setString(5, user_email);
+			pstmt.setString(1, id);
+			pstmt.setString(2, name);
+			pstmt.setString(3, pw);
+			pstmt.setString(4, phone);
+			pstmt.setString(5, email);
+			result = pstmt.executeUpdate();
+			
+			userInfo = new UserVO(id, 
+								  name, 
+				                  pw, 
+				                  phone, 
+				                  email,
+								  "0");
+			
 			
 			System.out.println("sql.toString() : " + sql.toString());
-			result = pstmt.executeUpdate();
+			
 			
 			// 만약 insert 되면 
 			// 리턴값 signUpcmpt에 true
 			if (result == 1) {
-				System.out.println(user_id + " " + user_name + " " + user_pw + " " + user_phone + " " + user_email + "if");
-				userInfo = new UserVO(rs.getString("USER_ID"), 
-								      rs.getString("USER_NAME"), 
-								      rs.getString("USER_PW"), 
-								      rs.getString("USER_PHONE"), 
-								      rs.getString("USER_EMAIL"),
-								      "0");
 				signUpcmpt = true;
 				}
 							 	  
