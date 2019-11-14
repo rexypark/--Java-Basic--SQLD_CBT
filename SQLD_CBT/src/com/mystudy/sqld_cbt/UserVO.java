@@ -10,6 +10,7 @@ public class UserVO {
 		private String user_phone;
 		private String user_email;
 		
+		
 		public UserVO(String user_id, String user_name, String user_pw, String user_phone, String user_email) {
 			super();
 			this.user_id = user_id;
@@ -57,6 +58,12 @@ public class UserVO {
 
 		public void setUser_email(String user_email) {
 			this.user_email = user_email;
+		}
+
+		@Override
+		public String toString() {
+			return "UserVO [user_id=" + user_id + ", user_name=" + user_name + ", user_pw=" + user_pw + ", user_phone="
+					+ user_phone + ", user_email=" + user_email + "]";
 		}
 		
 		

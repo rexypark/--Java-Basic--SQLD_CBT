@@ -18,7 +18,7 @@ public class UserDAO {
 	private Connection conn;
 	private PreparedStatement pstmt;
 	private ResultSet rs;
-	
+	public static UserVO userInfo;
 	
 	static {
 		try {
@@ -77,6 +77,8 @@ public class UserDAO {
 		try {
 			conn = DriverManager.getConnection(URL, USER, PASSWORD);
 			
+			
+			
 			//3. Statement문 실행(SQL문 실행)  
 			StringBuilder sql = new StringBuilder();
 			sql.append("SELECT * ");
@@ -91,10 +93,17 @@ public class UserDAO {
 			
 			rs = pstmt.executeQuery();
 			
-			if(rs.next()) { //데이터가 있으면
+			if(rs.next()) {
 				System.out.println(">> " + id + " 데이터 있음");
 				result = true;
+				userInfo = new UserVO(rs.getString("USER_ID"), 
+								  	 rs.getString("USER_NAME"), 
+									 rs.getString("USER_PW"), 
+									 rs.getString("USER_PHONE"), 
+									 rs.getString("USER_EMAIL"));
+				System.out.println(userInfo.toString());
 			}
+			
 			
 		} catch (SQLException e) {
 			e.printStackTrace();

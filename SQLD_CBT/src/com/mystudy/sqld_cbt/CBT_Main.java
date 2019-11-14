@@ -13,7 +13,6 @@ public class CBT_Main {
 		
 		
 		Scanner scan = new Scanner(System.in);
-		UserVO userVO =  new UserVO(user_id, user_name, user_pw, user_phone, user_email);
 		UserDAO userDao = new UserDAO();
 		
 		
@@ -31,12 +30,15 @@ public class CBT_Main {
 				while (true) {
 					System.out.println("로그인");
 					System.out.print("ID 입력 >>");
-					userVO.setUser_id(scan.nextLine());
+					user_id = scan.nextLine();
 					System.out.print("PW 입력 >>");
-					userVO.setUser_pw(scan.nextLine());
+					user_pw = scan.nextLine();
 					
-					if(userDao.checkIdPassword(userVO.getUser_id(), userVO.getUser_pw())) {
+					if(userDao.checkIdPassword(user_id, user_pw)) {
 						System.out.println("log In 완료!");
+						UserVO logUser = userDao.userInfo;
+						
+						UserLogDAO.userLog(logUser.getUser_id(), logUser.getUser_name(), "로그인");
 						break;
 					} else {
 						System.out.println("log In 실패!");
