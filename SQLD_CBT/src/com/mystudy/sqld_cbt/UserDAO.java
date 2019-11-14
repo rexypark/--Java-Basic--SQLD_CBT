@@ -12,8 +12,8 @@ public class UserDAO {
 	private static final String DRIVER = "oracle.jdbc.OracleDriver";
 	
 	private static final String URL = "jdbc:oracle:thin:@"+ IP + ":1521:xe";
-	private static final String USER = "mystudy";
-	private static final String PASSWORD = "MYSTUDY";
+	private static final String USER = "SQLD_CBT";
+	private static final String PASSWORD = "sqld";
 	
 	private Connection conn;
 	private PreparedStatement pstmt;
@@ -43,7 +43,7 @@ public class UserDAO {
 			
 			//SQL문장을 작성해서 Statement에 전달하고 sql문 실행 요청
 			StringBuilder sql = new StringBuilder();
-			sql.append("INSERT INTO MEMBER");
+			sql.append("INSERT INTO USER_INFO");
 			sql.append("     (SELECT USER_ID, USER_NAME, USER_PW, USER_PHONE, USER_EMAIL,USER_SEQNUM)");
 			sql.append("VALUES(?,?,?,?,?,SEQ_USER_INFO.NEXTVAL) "); //SEQ_USER_INFO 시퀀스 생성***
 			pstmt = conn.prepareStatement(sql.toString());
@@ -79,9 +79,9 @@ public class UserDAO {
 			
 			//3. Statement문 실행(SQL문 실행)  
 			StringBuilder sql = new StringBuilder();
-			sql.append("SELECT USER_ID, USER_NAME, USER_PW, USER_PHONE, USER_EMAIL ");
-			sql.append("FROM MEMBER ");
-			sql.append("WHERE ID = ? AND PASSWORD = ? ");
+			sql.append("SELECT * ");
+			sql.append("FROM USER_INFO ");
+			sql.append("WHERE USER_ID = ? AND USER_PW = ? ");
 			pstmt = conn.prepareStatement(sql.toString());
 			
 			pstmt.setString(1, id);
