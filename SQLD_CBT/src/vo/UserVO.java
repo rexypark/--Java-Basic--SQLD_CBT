@@ -1,4 +1,4 @@
-package com.mystudy.sqld_cbt;
+package vo;
 
 
 public class UserVO {

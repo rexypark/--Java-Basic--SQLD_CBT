@@ -1,4 +1,4 @@
-package com.mystudy.sqld_cbt;
+package dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -54,12 +54,8 @@ public class UserLogDAO {
 			pstmt.setString(idx++, name);      //회원 이름                       (L_USER_NAME)
 			pstmt.setString(idx++, act);       //회원가입, 접속, 종료    (USER_ACT)
 			
-			System.out.println("요청전");
-			
 			//SQL 실행 요청
 			result = pstmt.executeUpdate();
-			
-			System.out.println("요청후");
 			
 			//실패 하면 3회 retry 한다.
 			for (int i = 0; i < 3; i++) {

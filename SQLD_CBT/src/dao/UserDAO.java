@@ -1,4 +1,4 @@
-package com.mystudy.sqld_cbt;
+package dao;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -7,6 +7,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+
+import vo.UserVO;
 
 public class UserDAO {
 
@@ -68,7 +70,8 @@ public class UserDAO {
 								  	 rs.getString("USER_NAME"), 
 									 rs.getString("USER_PW"), 
 									 rs.getString("USER_PHONE"), 
-									 rs.getString("USER_EMAIL"));
+									 rs.getString("USER_EMAIL"),
+									 "0");
 			}
 			
 			
@@ -109,7 +112,8 @@ public class UserDAO {
 								    rs.getString("USER_NAME"), 
 								    rs.getString("USER_PW"), 
 								    rs.getString("USER_PHONE"), 
-								    rs.getString("USER_EMAIL")));
+								    rs.getString("USER_EMAIL"),
+								    "0"));
 			}
 			System.out.println("list data check : " + list.size());
 			
@@ -152,7 +156,8 @@ public class UserDAO {
 								      rs.getString("USER_NAME"), 
 								      rs.getString("USER_PW"), 
 								      rs.getString("USER_PHONE"), 
-								      rs.getString("USER_EMAIL"));
+								      rs.getString("USER_EMAIL"),
+								      "0");
 			}
 			
 		} catch (SQLException e) {
@@ -201,49 +206,52 @@ public class UserDAO {
 	// UserVO객체를 받으면 DB에 해당 유저 정보 입력
 	// LOG > true이면 userLog id, name, act(회원가입)
 	// 저장하면 result 1을 반환
-	public int inputUserInfo(UserVO user) {
+	// user정보를 입력 받아 
+	public boolean signUp(String user_id, String user_name, String user_pw, String user_phone, String user_email) {
+		boolean signUpcmpt = false;
 		int result = 0;
 		try {
 			conn = DriverManager.getConnection(URL, USER, PASSWORD);
 			
+			
 			//SQL문장을 작성해서 Statement에 전달하고 sql문 실행 요청
 			StringBuilder sql = new StringBuilder();
 			sql.append("INSERT INTO USER_INFO");
-			sql.append("     (SELECT USER_ID, USER_NAME, USER_PW, USER_PHONE, USER_EMAIL,USER_SEQNUM)");
-			sql.append("VALUES(?,?,?,?,?,SEQ_USER_INFO.NEXTVAL) "); //SEQ_USER_INFO 시퀀스 생성***
+			sql.append("     (SELECT USER_ID, USER_NAME, USER_PW, USER_PHONE, USER_EMAIL,USER_SEQNUM) ");
+			sql.append("VALUES(?,?,?,?,?,SEQ_USER_INFO.NEXTVAL) "); 
 			pstmt = conn.prepareStatement(sql.toString());
-			
+			System.out.println(user_id + " " + user_name + " " + user_pw + " " + user_phone + " " + user_email);
 			//?(Q바인딩변수)에 저장시키기
-			pstmt.setString(1, user.getUser_id());
-			pstmt.setString(2, user.getUser_name());
-			pstmt.setString(3, user.getUser_pw());
-			pstmt.setString(4, user.getUser_phone());
-			pstmt.setString(5, user.getUser_email());
+			pstmt.setString(1, user_id);
+			pstmt.setString(2, user_name);
+			pstmt.setString(3, user_pw);
+			pstmt.setString(4, user_phone);
+			pstmt.setString(5, user_email);
 			
 			System.out.println("sql.toString() : " + sql.toString());
 			result = pstmt.executeUpdate();
 			
-			
+			// 만약 insert 되면 
+			// 리턴값 signUpcmpt에 true
+			if (result == 1) {
+				System.out.println(user_id + " " + user_name + " " + user_pw + " " + user_phone + " " + user_email + "if");
+				userInfo = new UserVO(rs.getString("USER_ID"), 
+								      rs.getString("USER_NAME"), 
+								      rs.getString("USER_PW"), 
+								      rs.getString("USER_PHONE"), 
+								      rs.getString("USER_EMAIL"),
+								      "0");
+				signUpcmpt = true;
+				}
+							 	  
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
 			JDBC_Close.closeConnStmtRs(conn, pstmt);
 		}
-		return result;
-	}
-	
-	
-	
-	// user정보를 입력 받아 
-	public static boolean signUp(String user_id, String user_name, String user_pw, String user_phone, String user_email) {
-		boolean signUpcmpt = false;
 		
-		UserDAO dao = new UserDAO();
-		UserVO userVO = new UserVO(user_id, user_name, user_pw, user_phone, user_email);
 		//inputUserInfo insert실행이 되었으면 true
-		if (dao.inputUserInfo(userInfo) == 1) {
-			signUpcmpt = true;
-			}
+		
 		return signUpcmpt;
 	}
 

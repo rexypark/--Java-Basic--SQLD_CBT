@@ -2,6 +2,10 @@ package com.mystudy.sqld_cbt;
 
 import java.util.Scanner;
 
+import dao.UserDAO;
+import dao.UserLogDAO;
+import vo.UserVO;
+
 public class CBT_Main {
 	
 	public static void main(String[] args) {
@@ -38,7 +42,8 @@ public class CBT_Main {
 						System.out.println("log In 완료!");
 						UserVO logUser = userDao.userInfo;
 						
-						UserLogDAO.userLog(logUser.getUser_id(), logUser.getUser_name(), "로그인");
+						//아이디, 이름, 로그인 내용  USER_LOG테이블에 insert
+						UserLogDAO.userLog(logUser.getId(), logUser.getName(), "로그인");
 						break;
 					} else {
 						System.out.println("log In 실패!");
@@ -49,6 +54,9 @@ public class CBT_Main {
 				while (true) {
 					System.out.println("회원가입");
 					while (true) {
+						//버퍼오류
+						scan.nextLine();
+						
 						System.out.print("사용할 ID 입력 >>");
 						user_id = scan.nextLine();
 						//UserDAO에 있는 checkId메서드를 통해 ID 중복 검사
@@ -67,25 +75,24 @@ public class CBT_Main {
 					System.out.print("사용할 이메일 입력 >>");
 					user_email = scan.nextLine();
 					
-					boolean inUserData = UserSign.signUp(user_id, user_name, user_pw, user_phone, user_email);
+					boolean inUserData = userDao.signUp(user_id, user_name, user_pw, user_phone, user_email);
 					
 					//scan값 insert
 					if(inUserData = true) {
 						System.out.println("회원가입이 완료 되었습니다.");
+						//아이디, 이름, 로그인 내용  USER_LOG테이블에 insert
+						UserLogDAO.userLog(userDao.userInfo.getId(), userDao.userInfo.getName(), "로그인");
 						break;
 					} else {
 						System.out.println("회원가입 정상적으로 되지 않았습니다.");
 						System.out.println("다시 입력해주세요");
 					}
-				
 				} 
 			}//choice == 2
 			break;
 		 }//전체 while문
-		
 		}//main
-		
-		
+	
 //		public static void logIn() {
 //			
 //			while (true) {
