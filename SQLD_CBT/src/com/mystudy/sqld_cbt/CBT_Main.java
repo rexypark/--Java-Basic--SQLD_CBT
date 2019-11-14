@@ -48,8 +48,16 @@ public class CBT_Main {
 			} else if(choice == 2) {
 				while (true) {
 					System.out.println("회원가입");
-					System.out.print("사용할 ID 입력 >>");
-					user_id = scan.nextLine();
+					while (true) {
+						System.out.print("사용할 ID 입력 >>");
+						user_id = scan.nextLine();
+						//UserDAO에 있는 checkId메서드를 통해 ID 중복 검사
+						if(userDao.checkId(user_id)) {
+							System.out.println("다시 입력해 주세요");
+						}else {
+							break;
+						}
+					}
 					System.out.print("사용할 이름 입력 >>");
 					user_name = scan.nextLine();
 					System.out.print("사용할 비밀번호 입력 >>");
@@ -59,7 +67,7 @@ public class CBT_Main {
 					System.out.print("사용할 이메일 입력 >>");
 					user_email = scan.nextLine();
 					
-					boolean inUserData = UserSign.signUp(user_id,user_name, user_pw, user_phone, user_email);
+					boolean inUserData = UserSign.signUp(user_id, user_name, user_pw, user_phone, user_email);
 					
 					//scan값 insert
 					if(inUserData = true) {

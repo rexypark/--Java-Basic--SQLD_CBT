@@ -5,6 +5,8 @@ import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.List;
 
 public class UserDAO {
 
@@ -15,9 +17,9 @@ public class UserDAO {
 	private static final String USER = "SQLD_CBT";
 	private static final String PASSWORD = "sqld";
 	
-	private Connection conn;
-	private PreparedStatement pstmt;
-	private ResultSet rs;
+	private static Connection conn;
+	private static PreparedStatement pstmt;
+	private static ResultSet rs;
 	public static UserVO userInfo;
 	
 	static {
@@ -32,10 +34,173 @@ public class UserDAO {
 		
 		
 		}
+	
+	
+	//로그인 ID/PW 체크
+	//DB에서 ID와 PW가 있으면 로그인 성공
+	//성공 시 true 리턴
+	//true이면 userLog id, name, act(접속)
+	public boolean checkIdPassword(String id, String password) {
+		boolean result = false;
+		
+		
+		try {
+			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			
+			
+			//DB에서 ID와 PW가 함께 있으면 로그인 성공
+			StringBuilder sql = new StringBuilder();
+			sql.append("SELECT * ");
+			sql.append("FROM USER_INFO ");
+			sql.append("WHERE USER_ID = ? AND USER_PW = ? ");
+			pstmt = conn.prepareStatement(sql.toString());
+			
+			pstmt.setString(1, id);
+			pstmt.setString(2, password);
+			
+			rs = pstmt.executeQuery();
+			
+			// rs에 해당 데이터가 들어가면 result > true
+			// userInfo에 위에서 select한 모든 컬럼의 데이터들을 저장
+			if(rs.next()) {
+				result = true;
+				userInfo = new UserVO(rs.getString("USER_ID"), 
+								  	 rs.getString("USER_NAME"), 
+									 rs.getString("USER_PW"), 
+									 rs.getString("USER_PHONE"), 
+									 rs.getString("USER_EMAIL"));
+			}
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			//사용한 객체 close
+			JDBC_Close.closeConnectionStmtRs(conn, pstmt, rs);
+			
+		}
+		//result true or false반환
+		return result;
+	}
 
 	
-	//회원가입 정보 입력
-	//true이면 userLog id, name, act(회원가입)
+	
+	// User에 있는 모든 데이터를 출력
+	public List<UserVO> selectUserAll() {
+		List<UserVO> list = new ArrayList<>();
+		
+		//DB연결 - Connection 객체 생성(DB와 연결된)
+		try {
+			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			
+			//PreparedStatement 객체 생성하고 SQL문 실행
+			StringBuilder sql = new StringBuilder();
+			sql.append("SELECT * ");
+			sql.append("FROM USER_INFO ");
+			sql.append("ORDER BY USER_SEQNUM");
+		
+			pstmt = conn.prepareStatement(sql.toString());
+			
+			rs = pstmt.executeQuery();
+				
+			//SQL문 실행 결과에 대한 처리
+			while (rs.next()) {
+				list.add(new UserVO(rs.getString("USER_ID"), 
+								    rs.getString("USER_NAME"), 
+								    rs.getString("USER_PW"), 
+								    rs.getString("USER_PHONE"), 
+								    rs.getString("USER_EMAIL")));
+			}
+			System.out.println("list data check : " + list.size());
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			//사용객체 close
+			JDBC_Close.closeConnStmtRs(conn, pstmt, rs);
+		}
+
+		return list;
+	}//selectAll End
+
+
+	
+	// 아이디를 입력하면 userInfo에 해당 유저의 모든 정보가 
+	// 들어간 UserVO객체를 생성한다.
+	public UserVO selectUser(String id) {
+		
+		//DB연결 - Connection 객체 생성(DB와 연결된)
+		try {
+			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			
+			//PreparedStatement 객체 생성하고 SQL문 실행
+			StringBuilder sql = new StringBuilder();
+			sql.append("SELECT * ");
+			sql.append("FROM USER_INFO ");
+			sql.append("WHERE USER_ID = ?");
+
+			pstmt.setString(1, id); 
+			
+			pstmt = conn.prepareStatement(sql.toString());
+			
+			rs = pstmt.executeQuery();
+			
+			//SQL문 실행 결과에 대한 처리
+			while (rs.next()) {
+				userInfo = new UserVO(rs.getString("USER_ID"), 
+								      rs.getString("USER_NAME"), 
+								      rs.getString("USER_PW"), 
+								      rs.getString("USER_PHONE"), 
+								      rs.getString("USER_EMAIL"));
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			//사용객체 close
+			JDBC_Close.closeConnStmtRs(conn, pstmt, rs);
+		}
+		return userInfo;
+	}//selectAll End
+	
+	
+	// 회원가입 중 아이디의 중복을 검사한다.
+	// 모든 아이디 중에 입력 받은 id가 DB에 있는지 확인
+	// 있으면 true를 리턴 없으면 false
+	public static boolean checkId(String id) {
+		boolean result = false;
+		try {
+			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			
+			StringBuilder sql = new StringBuilder();
+			sql.append("SELECT * ");
+			sql.append("FROM USER_INFO ");
+			sql.append("WHERE USER_ID = ?");
+			pstmt = conn.prepareStatement(sql.toString());
+			
+			pstmt.setString(1, id);
+			
+			rs = pstmt.executeQuery();
+			
+			if(rs.next()) {
+				System.out.println(">> " + id + "사용중인 아이디입니다.");
+				result = true;
+			}
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBC_Close.closeConnectionStmtRs(conn, pstmt, rs);
+		}
+		
+		return result;
+	}
+	
+	// **회원가입 정보 입력 메서드
+	// UserVO객체를 받으면 DB에 해당 유저 정보 입력
+	// LOG > true이면 userLog id, name, act(회원가입)
+	// 저장하면 result 1을 반환
 	public int inputUserInfo(UserVO user) {
 		int result = 0;
 		try {
@@ -68,58 +233,19 @@ public class UserDAO {
 	}
 	
 	
-	//로그인 ID/PW 체크
-	//true이면 userLog id, name, act(접속)
-	public boolean checkIdPassword(String id, String password) {
-		boolean result = false;
+	
+	// user정보를 입력 받아 
+	public static boolean signUp(String user_id, String user_name, String user_pw, String user_phone, String user_email) {
+		boolean signUpcmpt = false;
 		
-		
-		try {
-			conn = DriverManager.getConnection(URL, USER, PASSWORD);
-			
-			
-			
-			//3. Statement문 실행(SQL문 실행)  
-			StringBuilder sql = new StringBuilder();
-			sql.append("SELECT * ");
-			sql.append("FROM USER_INFO ");
-			sql.append("WHERE USER_ID = ? AND USER_PW = ? ");
-			pstmt = conn.prepareStatement(sql.toString());
-			
-			pstmt.setString(1, id);
-			pstmt.setString(2, password);
-			
-			System.out.println("sql.toString() : " + sql.toString());
-			
-			rs = pstmt.executeQuery();
-			
-			if(rs.next()) {
-				System.out.println(">> " + id + " 데이터 있음");
-				result = true;
-				userInfo = new UserVO(rs.getString("USER_ID"), 
-								  	 rs.getString("USER_NAME"), 
-									 rs.getString("USER_PW"), 
-									 rs.getString("USER_PHONE"), 
-									 rs.getString("USER_EMAIL"));
-				System.out.println(userInfo.toString());
+		UserDAO dao = new UserDAO();
+		UserVO userVO = new UserVO(user_id, user_name, user_pw, user_phone, user_email);
+		//inputUserInfo insert실행이 되었으면 true
+		if (dao.inputUserInfo(userInfo) == 1) {
+			signUpcmpt = true;
 			}
-			
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} finally {
-			//사용한 객체 close
-			JDBC_Close.closeConnectionStmtRs(conn, pstmt, rs);
-			
-		}
-		
-		return result;
+		return signUpcmpt;
 	}
-
-
-
-
-
 
 
 	public static void main(String[] args) {
