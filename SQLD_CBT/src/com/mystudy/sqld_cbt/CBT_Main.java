@@ -2,6 +2,7 @@ package com.mystudy.sqld_cbt;
 
 import java.util.Scanner;
 
+import dao.MockTestDAO;
 import dao.UserDAO;
 import dao.UserLogDAO;
 import exam.Quiz;
@@ -50,7 +51,7 @@ public class CBT_Main {
 			if(choice == 1) {
 				Quiz.quizStart();
 			} else if (choice == 2){
-//			();
+			MockTestDAO.mockTestAll();
 			} else {
 			break;
 			}

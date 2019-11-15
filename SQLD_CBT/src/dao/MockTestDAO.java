@@ -9,29 +9,17 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import vo.ExamVO;
+
 public class MockTestDAO {
 	
-	public static final String DRIVER = "oracle.jdbc.OracleDriver";
-	public static final String URL = "jdbc:oracle:thin:@192.168.0.69:1521:xe";
-	private static final String USER = "SQLD_CBT";
-	private static final String PASSWORD = "sqld";
-
-	private static Connection conn;
-	private static PreparedStatement pstmt;
-	private static ResultSet rs;
-	Scanner scan = new Scanner(System.in);
-
-	static {
-		try {
-			Class.forName(DRIVER);
-			System.out.println(">> JDBC Driver Loading Success");
-		} catch (ClassNotFoundException e) {
-			System.out.println("[예외발생] JDBC Driver Loading Fail");
-		}
-	}
 	
-	public void mockTestAll() {
-		
+	static Scanner scan = new Scanner(System.in);
+	
+	public static void mockTestAll() {
+		if (DbConn.result == 0) {
+			DbConn.driverLoad();
+		}
 		
 		int examValue; //문제 개수 입력 받는 변수
 		String answer; //문제 정답 입력 받는 변수
@@ -39,7 +27,7 @@ public class MockTestDAO {
 		boolean mainWhile = true;
 		while(mainWhile) {//main while문
 			try {
-				conn = DriverManager.getConnection(URL, USER, PASSWORD);
+				DbConn.conn = DriverManager.getConnection(DbConn.URL, DbConn.USER, DbConn.PASSWORD);
 				System.out.println("|========================================================|");
 				System.out.println("|               환영 합니다 모의고사를 시작하겠습니다.             |");
 				System.out.println("|           SQLD시험은 총 2과목을 시험과목으로 보고 있습니다.        |");
@@ -60,16 +48,16 @@ public class MockTestDAO {
 					sql.append("FROM EXAM_INFO ");
 					sql.append("WHERE SECTION = " + i);
 					
-					pstmt = conn.prepareStatement(sql.toString());
-					rs = pstmt.executeQuery();
+					DbConn.pstmt = DbConn.conn.prepareStatement(sql.toString());
+					DbConn.rs = DbConn.pstmt.executeQuery();
 				
-					while (rs.next()) {
+					while (DbConn.rs.next()) {
 						for (int j = 0; j <= examValue; j++ ) {
-						 list.add(new ExamVO(rs.getString("QUESTION"),
-									rs.getString("ANSWER"),
-									rs.getString("SECTION"),
-									rs.getString("EXAM_SEQNUM"),
-									rs.getString("ANSWER_INFO")));
+						 list.add(new ExamVO(DbConn.rs.getString("QUESTION"),
+								 			 DbConn.rs.getString("ANSWER"),
+								 			 DbConn.rs.getString("SECTION"),
+								 			 DbConn.rs.getString("EXAM_SEQNUM"),
+								 			 DbConn.rs.getString("ANSWER_INFO")));	
 						}	
 						break; //사용자가 원한 문제 수 만큼 list에 add하고 break;
 					}
@@ -86,7 +74,7 @@ public class MockTestDAO {
 							System.out.println(mvo.getAnswerInfo() + "\n");
 							success[i] += 1;
 							if (i == 2) {
-								if (false == rs.next()) {
+								if (false == DbConn.rs.next()) {
 									System.out.println("[1. 데이터 모델링의 이해]  총 문제수 : " +examValue);
 									System.out.println(" - 정답 : " + success[1] + " 오답 : " + fail[1] + "\t");
 									System.out.println("[2. SQL 기본 및 활용]    총 문제수 : " +examValue);
@@ -109,7 +97,7 @@ public class MockTestDAO {
 							System.out.println(mvo.getAnswerInfo() + "\n");
 							fail[i] += 1;
 							if (i == 2) {
-								if (false == rs.next()) {
+								if (false == DbConn.rs.next()) {
 									System.out.println("1. 데이터 모델링의 이해  정답수 : " + success[1]);
 									System.out.println("1. 데이터 모델링의 이해  오답수 : " + fail[1]);
 									System.out.println("2. SQL 기본 및 활용 정답수      : " + success[2]);
@@ -137,7 +125,7 @@ public class MockTestDAO {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			} finally {
-				JDBC_Close.closeConnStmtRs(conn, pstmt, rs);
+				JDBC_Close.closeConnStmtRs(DbConn.conn, DbConn.pstmt, DbConn.rs);
 			}
 	
 		}//main while End
