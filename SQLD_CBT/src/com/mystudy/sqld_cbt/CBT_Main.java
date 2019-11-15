@@ -4,6 +4,7 @@ import java.util.Scanner;
 
 import dao.UserDAO;
 import dao.UserLogDAO;
+import exam.Quiz;
 import log_in.LogInSignIn;
 import vo.UserVO;
 
@@ -26,7 +27,7 @@ public class CBT_Main {
 				scan.nextLine();
 				//logIn
 				LogInSignIn.logIn();
-				scan.close();
+				
 				break;
 			} else if(choice == 2) {
 				//버퍼 제거
@@ -42,19 +43,20 @@ public class CBT_Main {
 		}
 		
 		
-//		while (true) {
-//			int choice;
-//			System.out.println("1. quiz   2. selfTest 3. exit");
-//			choice = scan.nextInt();
-//			if(choice == 1) {
-////				quiz();
-//			} else if (choice == 2){
-////			selfTest();
-//		} else {
-//			break;
-//		}
-//		
-//			System.out.println("로그아웃 되셨습니다.");
-//		}//while
+		while (true) {
+			int choice;
+			System.out.println("1. quiz   2. selfTest 3. exit");
+			choice = scan.nextInt();
+			if(choice == 1) {
+				Quiz.quizStart();
+			} else if (choice == 2){
+//			selfTest();
+			} else {
+			break;
+			}
+		}//while
+		System.out.println("로그아웃 되셨습니다.");
+		
+		scan.close();
 	}//main
 }

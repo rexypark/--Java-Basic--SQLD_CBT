@@ -10,100 +10,120 @@ import java.util.List;
 import java.util.Scanner;
 
 import vo.ExamVO;
+import dao.DbConn;
 import dao.JDBC_Close;
 
 public class Quiz {
 	
-	public static final String DRIVER = "oracle.jdbc.OracleDriver";
-	public static final String URL = "jdbc:oracle:thin:@192.168.0.69:1521:xe";
-	private static final String USER = "SQLD_CBT";
-	private static final String PASSWORD = "sqld";
-
-	private static Connection conn;
-	private static PreparedStatement pstmt;
-	private static ResultSet rs;
-
-	static {
-		try {
-			Class.forName(DRIVER);
-			System.out.println(">> JDBC Driver Loading Success");
-		} catch (ClassNotFoundException e) {
-			System.out.println("[예외발생] JDBC Driver Loading Fail");
-		}
-	}
 	
 	
+	private static Scanner scan = new Scanner(System.in); 
 	
-	public static void main(String[] args) {
+	
+	public static void quizStart() {
 		Scanner scan = new Scanner(System.in);
 		String input;
+		System.out.println("Quiz방에 입장하셨습니다.");
+		System.out.println("방장 >> 키워드 - sqld1 : 과목 1");
+		System.out.println("방장>> 키워드 - sqld2 : 과목 2");
+		System.out.println("방장>> 키워드 - sqld3 : 과목 3");
+		System.out.println("해당 키워드를 입력 하시면 해당 과목의 문제가 출제됩니다.");
+		
 		while (true) {
 			//1 
-			System.out.println("Quiz방에 입장하셨습니다.");
-			System.out.println("방장 >> 키워드 - sqld1 : 과목 1");
-			System.out.println("방장>> 키워드 - sqld2 : 과목 2");
-			System.out.println("방장>> 키워드 - sqld3 : 과목 3");
-			System.out.println("해당 키워드를 입력 하시면 해당 과목의 문제가 출제됩니다.");
-			
-			while(true) {
+			System.out.print(dao.UserDAO.userInfo.getId() + " >>");
+			String key = keyword(scan.nextLine());
+			if (key.equals("exit")) break;
 				
-				System.out.print(">>");
-				input = scan.nextLine();
-				switch (keyword(input)) {
-					case 1 :
-						System.out.println("1과목 문제");
-						break;
-					case 2 :
-						System.out.println("2과목 문제");
-						break;
-					case 3 :
-						System.out.println("3과목 문제");
-						break;
-					default :
-						break;
-				}
-				
-				System.out.println("문제출력메소드");
-				
-				System.out.println("정답출력메소드");
-				System.out.println("해설출력메소드");
-				System.out.println("");
-				 
+			switch (keyword(key)) {
+				case "1" :
+					quesPrint(1);
+					break;
+				case "2" :
+					quesPrint(2);
+					break;
+				case "3" :
+					quesPrint(3);
+					break;
+				default :
+					break;
 			}
+			System.out.println(key);
 		}
 	}//main
 	
-	public static void quesPrint() {
+	public static void quesPrint(int section) {
 		
-		List<ExamVO> list = new ArrayList<>();
+		ExamVO vo = selectQues(section);
+		String userAnswer;
+		System.out.println("===========================");
+		System.out.println(vo.getQwestion());//문제
 		
+		System.out.println("---------------------------");
+		System.out.println(">>");
+		userAnswer = scan.nextLine();
+		if(userAnswer.equals(vo.getAnswer())) {
+			System.out.println("정답이다");
+		}else {
+			System.out.println("땡!!!!");
+		}
+		System.out.println("정답 : " + vo.getAnswer());
+		System.out.println("해설 : " + vo.getAnswerInfo());
+		System.out.println("---------------------------");
+	}
+	
+	public static ExamVO selectQues(int section) {
+		
+		if (DbConn.result == 0) {
+			DbConn.driverLoad();
+		}
+		
+		ExamVO examVO = null;
 		try {
-			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			DbConn.conn = DriverManager.getConnection(DbConn.URL, DbConn.USER, DbConn.PASSWORD);
 			
 			StringBuilder sql = new StringBuilder();
-			sql.append("SELECT QUESTION, ANSWER, SECTION, EXAM_SEQNUM");
-			sql.append("  FROM EXAM_INFO ");//조인
-			sql.append(" ORDER BY QUESTION");
-			pstmt = conn.prepareStatement(sql.toString());
+			sql.append("SELECT *");
+			sql.append("  FROM (SELECT* FROM EXAM_INFO ");//조인
+			sql.append("  WHERE SECTION = ?  ");//조인
+			sql.append("  ORDER BY DBMS_RANDOM.VALUE)" + 
+					"WHERE ROWNUM = 1");//조인
 			
-			rs = pstmt.executeQuery();
+			DbConn.pstmt = DbConn.conn.prepareStatement(sql.toString());
 			
-			while (rs.next()) {
-			 list.add(new ExamVO(rs.getString("QUESTION"),
-							     rs.getString("ANSWER"),
-							     rs.getString("SECTION"),
-							     rs.getString("EXAM_SEQNUM"), null));
-					
-			}
+			DbConn.pstmt.setInt(1, section);
+			
+			DbConn.rs = DbConn.pstmt.executeQuery();
+			
+			if (DbConn.rs.next()) {
+				examVO = new ExamVO(DbConn.rs.getString("QUESTION"),
+									DbConn.rs.getString("ANSWER"),
+									DbConn.rs.getString("SECTION"),
+									DbConn.rs.getString("EXAM_SEQNUM"), 
+									DbConn.rs.getString("ANSWER_INFO"));
+			} 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			JDBC_Close.closeConnStmtRs(conn, pstmt, rs);
+			JDBC_Close.closeConnStmtRs(DbConn.conn, DbConn.pstmt, DbConn.rs);
 		}
-		
+		return examVO;
 	}
 	
-	static void keyword() {
+	public static String keyword(String usrInput) {
+		String result = "0";
 		
+		if (usrInput.equals("sqld1"))  {
+			result = "1";
+			return result;
+		} else if (usrInput.equals("sqld2")) {
+			result = "2";
+			return result;
+		} else if (usrInput.equals("sqld3")) {
+			result = "3";
+			return result;
+		}
+		
+		return usrInput;
 	}
 }
