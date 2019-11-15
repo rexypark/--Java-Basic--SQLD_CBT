@@ -53,9 +53,6 @@ public class LogInSignIn {
 		while (true) {
 			System.out.println("회원가입");
 			while (true) {
-				//버퍼오류
-				scan.nextLine();
-				
 				System.out.print("사용할 ID 입력 >>");
 				user_id = scan.nextLine();
 				//UserDAO에 있는 checkId메서드를 통해 ID 중복 검사

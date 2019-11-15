@@ -14,52 +14,42 @@ import vo.UserVO;
 
 public class ExamDAO {
 	
-	private static final String DRIVER = "oracle.jdbc.OracleDriver";
-	private static final String URL = "jdbc:oracle:thin:@192.168.0.69:1521:xe";
-	private static final String USER = "SQLD_CBT";
-	private static final String PASSWORD = "sqld";
-
-	private static Connection conn;
-	private static PreparedStatement pstmt;
-	private static ResultSet rs;
-
-	static{
-		try {
-			Class.forName(DRIVER);
-			System.out.println(">> JDBC Driver Loading Success");
-		} catch (ClassNotFoundException e) {
-			System.out.println("[예외발생] JDBC Driver Loading Fail");
-			
-		}
-	}
-		
+	
 	public List<ExamVO> selectAll() {
 		
-	
+		if (DbConn.result == 0) {
+			DbConn.driverLoad();
+		}
+		
 		List<ExamVO> list = new ArrayList<>();
 		
 		try {
-			conn = DriverManager.getConnection(URL, USER, PASSWORD);
+			
+			if (DbConn.result == 0) {
+				DbConn.driverLoad();
+			}
+			
+			DbConn.conn = DriverManager.getConnection(DbConn.URL, DbConn.USER, DbConn.PASSWORD);
 			
 			StringBuilder sql = new StringBuilder();
 			sql.append("SELECT QUESTION, ANSWER, SECTION, EXAM_SEQNUM");
 			sql.append("  FROM EXAM_INFO ");//조인
 			sql.append(" ORDER BY QUESTION");
-			pstmt = conn.prepareStatement(sql.toString());
+			DbConn.pstmt = DbConn.conn.prepareStatement(sql.toString());
 			
-			rs = pstmt.executeQuery();
+			DbConn.rs = DbConn.pstmt.executeQuery();
 			
-			while (rs.next()) {
-			 list.add(new ExamVO(rs.getString("QUESTION"),
-						rs.getString("ANSWER"),
-						rs.getString("SECTION"),
-						rs.getString("EXAM_SEQNUM"), null));
+			while (DbConn.rs.next()) {
+			 list.add(new ExamVO(DbConn.rs.getString("QUESTION"),
+								 DbConn.rs.getString("ANSWER"),
+								 DbConn.rs.getString("SECTION"),
+								 DbConn.rs.getString("EXAM_SEQNUM"), null));
 					
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			JDBC_Close.closeConnStmtRs(conn, pstmt, rs);
+			JDBC_Close.closeConnStmtRs(DbConn.conn, DbConn.pstmt, DbConn.rs);
 		}
 		
 		return list;

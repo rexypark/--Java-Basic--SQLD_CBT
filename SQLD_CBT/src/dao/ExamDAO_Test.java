@@ -4,12 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 
+import vo.ExamVO;
+
 public class ExamDAO_Test {
 
 	public static void main(String[] args) {
 		ExamDAO dao = new ExamDAO();
-		List<UserVO> list = dao.selectAll();
-		for (UserVO mvo : list ) {
+		List<ExamVO> list = dao.selectAll();
+		for (ExamVO mvo : list ) {
 		System.out.println("===========================");
 		System.out.println(mvo.getQwestion());//¹®Á¦
 		
