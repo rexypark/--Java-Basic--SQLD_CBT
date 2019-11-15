@@ -50,9 +50,107 @@ public class UserVO {
 			this.answerInfo = answerInfo;
 		}
 
-		
-		
+		public String getId() {
+			return id;
+		}
 
-		
-	
+		public void setId(String id) {
+			this.id = id;
+		}
+
+		public String getName() {
+			return name;
+		}
+
+		public void setName(String name) {
+			this.name = name;
+		}
+
+		public String getPw() {
+			return pw;
+		}
+
+		public void setPw(String pw) {
+			this.pw = pw;
+		}
+
+		public String getPhone() {
+			return phone;
+		}
+
+		public void setPhone(String phone) {
+			this.phone = phone;
+		}
+
+		public String getEmail() {
+			return email;
+		}
+
+		public void setEmail(String email) {
+			this.email = email;
+		}
+
+		public String getSeqnum() {
+			return seqnum;
+		}
+
+		public void setSeqnum(String seqnum) {
+			this.seqnum = seqnum;
+		}
+
+		public String getAct() {
+			return act;
+		}
+
+		public void setAct(String act) {
+			this.act = act;
+		}
+
+		public String getTime() {
+			return time;
+		}
+
+		public void setTime(String time) {
+			this.time = time;
+		}
+
+		public String getQwestion() {
+			return qwestion;
+		}
+
+		public void setQwestion(String qwestion) {
+			this.qwestion = qwestion;
+		}
+
+		public String getAnswer() {
+			return answer;
+		}
+
+		public void setAnswer(String answer) {
+			this.answer = answer;
+		}
+
+		public String getSection() {
+			return section;
+		}
+
+		public void setSection(String section) {
+			this.section = section;
+		}
+
+		public String getAnswerInfo() {
+			return answerInfo;
+		}
+
+		public void setAnswerInfo(String answerInfo) {
+			this.answerInfo = answerInfo;
+		}
+
+		@Override
+		public String toString() {
+			return "UserVO [id=" + id + ", name=" + name + ", pw=" + pw + ", phone=" + phone + ", email=" + email
+					+ ", seqnum=" + seqnum + ", act=" + act + ", time=" + time + ", qwestion=" + qwestion + ", answer="
+					+ answer + ", section=" + section + ", answerInfo=" + answerInfo + "]";
+		}
+
 }
