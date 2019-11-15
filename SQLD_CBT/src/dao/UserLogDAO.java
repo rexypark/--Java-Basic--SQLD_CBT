@@ -47,7 +47,7 @@ public class UserLogDAO {
 			sql.append("VALUES (?, ?, ?, "
 					+ "(TO_CHAR(SYSDATE, 'YYYY-MM-DD HH24:MI:SS'))) ");
 			pstmt = conn.prepareStatement(sql.toString());
-				
+			
 			// ? (바인딩변수)에 값 매칭 시키기
 			int idx = 1;
 			pstmt.setString(idx++, id);        //회원 아이디                    (L_USER_ID)
