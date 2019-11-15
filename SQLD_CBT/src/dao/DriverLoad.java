@@ -10,7 +10,7 @@ public static class DriverLoad {
 	public static final String URL = "jdbc:oracle:thin:@192.168.0.69:1521:xe";
 	public static final String USER = "SQLD_CBT";
 	public static final String PASSWORD = "sqld";
-	static int checkDbIn = 0;
+	public static int checkDbIn = 0;
 	
 	public  static Connection conn;
 	public  static PreparedStatement pstmt;

@@ -9,16 +9,33 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
+import vo.ExamVO;
 import vo.UserVO;
 
 public class ExamDAO {
 	
+	private static final String DRIVER = "oracle.jdbc.OracleDriver";
+	private static final String URL = "jdbc:oracle:thin:@192.168.0.69:1521:xe";
+	private static final String USER = "SQLD_CBT";
+	private static final String PASSWORD = "sqld";
+
+	private static Connection conn;
+	private static PreparedStatement pstmt;
+	private static ResultSet rs;
+
+	static{
+		try {
+			Class.forName(DRIVER);
+			System.out.println(">> JDBC Driver Loading Success");
+		} catch (ClassNotFoundException e) {
+			System.out.println("[예외발생] JDBC Driver Loading Fail");
+			
+		}
+	}
 		
 	public List<ExamVO> selectAll() {
 		
-		DriverLoad dbConn = new DriverLoad();
-		dbConn.dbConn();
-		
+	
 		List<ExamVO> list = new ArrayList<>();
 		
 		try {
@@ -36,7 +53,7 @@ public class ExamDAO {
 			 list.add(new ExamVO(rs.getString("QUESTION"),
 						rs.getString("ANSWER"),
 						rs.getString("SECTION"),
-						rs.getString("EXAM_SEQNUM")));
+						rs.getString("EXAM_SEQNUM"), null));
 					
 			}
 		} catch (SQLException e) {
