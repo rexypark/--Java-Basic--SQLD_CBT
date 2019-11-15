@@ -6,6 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class JDBC_Close {
+	
 	public static void closeConnStmtRs(Connection conn,
 			PreparedStatement pstmt) {
 		try {

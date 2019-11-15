@@ -24,6 +24,7 @@ public class CBT_Main {
 			choice = scan.nextInt();
 			
 			if(choice == 1) {
+				
 				//버퍼 제거
 				scan.nextLine();
 				//logIn
