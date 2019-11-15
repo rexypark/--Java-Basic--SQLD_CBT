@@ -26,7 +26,7 @@ public class UserDAO {
 	
 	static {
 		try {
-			//1. JDBC 드라이버 로딩
+			
 			Class.forName(DRIVER);
 			System.out.println(">> JDBC 드라이버 로딩 성공");
 		} catch (ClassNotFoundException e) {

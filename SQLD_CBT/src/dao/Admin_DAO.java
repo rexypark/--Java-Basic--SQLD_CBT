@@ -107,10 +107,6 @@ public class Admin_DAO {
 	
 	
 	//3.장기 미접속자
-	
-	
-	
-	
 	public List<UserVO> selectAll() {
 		List<UserVO> list = new ArrayList<>();
 		
