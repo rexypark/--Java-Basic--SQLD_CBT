@@ -11,16 +11,14 @@ import java.util.List;
 
 import vo.UserVO;
 
-public class ExamDAO extends{
-	public static void main(String[] args) {
-	DriverLoad dload = new DriverLoad();
-	if (dload.checkDbIn == 0) {
-		dload.driverLoad();	
-	}
+public class ExamDAO {
 	
-	}
 		
 	public List<ExamVO> selectAll() {
+		
+		DriverLoad dbConn = new DriverLoad();
+		dbConn.dbConn();
+		
 		List<ExamVO> list = new ArrayList<>();
 		
 		try {
