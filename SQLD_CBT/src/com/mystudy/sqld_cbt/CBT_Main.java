@@ -50,7 +50,7 @@ public class CBT_Main {
 			if(choice == 1) {
 				Quiz.quizStart();
 			} else if (choice == 2){
-//			selfTest();
+//			();
 			} else {
 			break;
 			}
