@@ -16,9 +16,9 @@ public class MockTestDAO {
 	static Scanner scan = new Scanner(System.in);
 
 	public static void mockTestAll() {
-		if (DbConn.result == 0) {
-			DbConn.driverLoad();
-		}
+		
+		
+
 		DbConn.clearScreen(); // 화면 Clear
 		int examValue; //문제 개수 입력 받는 변수
 		int examCount; //프로그램 종료를 위한 카운트 변수
@@ -28,7 +28,8 @@ public class MockTestDAO {
 		boolean mainWhile = true;
 		while(mainWhile) {//main while문
 			try {
-				DbConn.conn = DriverManager.getConnection(DbConn.URL, DbConn.USER, DbConn.PASSWORD);
+
+//				DbConn.conn = DriverManager.getConnection(DbConn.URL, DbConn.USER, DbConn.PASSWORD);
 				System.out.println("|=======================================================================|");
 				System.out.println("|                                                                       |");
 				System.out.println("|                                [환영 합니다]                             |");
@@ -45,22 +46,28 @@ public class MockTestDAO {
 				
 				System.out.print("   => 각 과목당 풀 문제의 수를 입력해 주세요 !!! : ");
 				long startTime = System.currentTimeMillis(); //모의고사 시작 시간 Check
-				
 				examValue = scan.nextInt();
 				scan.nextLine();
 				examCount = examValue * 2;
+				DbConn.clearScreen(); // 화면 Clear
 				int[] success = new int[2]; //정답 카운트용 배열 변수 선언
 				int[] fail = new int[2];    //오답 카운트용 배열 변수 선언
 				
 				for (int i = 1; i <= 2 ; i++) { //SELECT FOR문 시작
 					StringBuilder sql = new StringBuilder();
+					if (DbConn.result == 0) {
+						DbConn.driverLoad();
+					}
+					DbConn.conn = DriverManager.getConnection(DbConn.URL, DbConn.USER, DbConn.PASSWORD);
 					list = new ArrayList<>();
 					sql.append("SELECT * ");
 					sql.append("FROM EXAM_INFO ");
 					sql.append("WHERE SECTION = " + i);
 					sql.append(" ORDER BY DBMS_RANDOM.VALUE"); //랜덤으로 데이터를 가져 온다.
 					
+					System.out.println("i의 값 : " + i);
 					DbConn.pstmt = DbConn.conn.prepareStatement(sql.toString());
+					System.out.println("???????");
 					DbConn.rs = DbConn.pstmt.executeQuery();
 					
 					for (int j = 0 ; j < examValue; j++) {
@@ -98,11 +105,11 @@ public class MockTestDAO {
 						 DbConn.clearScreen(); //Enter키 입력시 80칸공백 method 호출
 
 					 } //for문 End
-				 	System.out.println(UserDAO.userInfo.getId());
 					 if (i == 2) {
 						 if (examCount == 0) {
+							 System.out.println(UserDAO.userInfo.getId());
 							 long endTime = System.currentTimeMillis();
-							 System.out.println( "모의고사 시간 : " + ( endTime - startTime )/1000.0 +"초");
+							 System.out.println( "모의고사 경과시간 : " + ( endTime - startTime )/1000.0 +"초");
 
 							 System.out.println("[1. 데이터 모델링의 이해]  총 문제수 : " +examValue);
 							 System.out.println(" - 정답 : " + success[0] + " 오답 : " + fail[0] + "\t");
