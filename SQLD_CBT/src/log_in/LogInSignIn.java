@@ -2,6 +2,7 @@ package log_in;
 
 import java.util.Scanner;
 
+import dao.DbConn;
 import dao.UserDAO;
 import dao.UserLogDAO;
 import vo.UserVO;
@@ -24,26 +25,56 @@ public class LogInSignIn {
 	
 	Scanner scan = new Scanner(System.in);
 	UserDAO userDao = new UserDAO();
+	DbConn.clearScreen();
 	while (true) {
-		System.out.println("로그인");
-		System.out.print("ID 입력 >>");
+		System.out.println("         |================================|");
+		System.out.println("         |    [SQLD CBT Program Login]    |         ");
+		System.out.println("         |                                |         ");
+		System.out.println("         |         ID : _________         |         ");
+		System.out.print("                  ID 입력 : ");
 		user_id = scan.nextLine();
-		System.out.print("PW 입력 >>");
+		DbConn.clearScreen();
+		System.out.println("         |================================|");
+		System.out.println("         |    [SQLD CBT Program Login]    |         ");
+		System.out.println("         |                                |         ");
+		System.out.println("                  ID : " + user_id + "              ");
+		System.out.println("                  PW : _________                  ");
+		System.out.print("                 PW 입력 : ");
 		user_pw = scan.nextLine();
+		DbConn.clearScreen();
+		System.out.println("         |================================|");
+		System.out.println("         |    [SQLD CBT Program Login]    |         ");
+		System.out.println("         |                                |         ");
+		System.out.println("                  ID : " + user_id + "              ");
+		System.out.println("                  PW : " + user_pw + "              ");
 		
 		// DB에서 해당 아이디 비밀번호가 있는지 확인 true이면 
 		// logIn 성공하여 while문 break 아니면 실패하여 로그인 반복
 		if(userDao.checkIdPassword(user_id, user_pw)) {
-			System.out.println("log In 완료!");
+			System.out.println("         |                                |         ");
+			System.out.println("         |        [log In Success]        |          ");
+			System.out.println("         |================================|");
 			UserVO logUser = userDao.userInfo;
+			try {
+				Thread.sleep(2000); // 로그인 Success창 2초 딜레이 준 뒤 다음 스텝으로 넘어간다.)
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
 			
 			//아이디, 이름, 로그인 내용  USER_LOG테이블에 insert
 			UserLogDAO.userLog(logUser.getId(), logUser.getName(), "로그인");
 			break;
 		} else {
 			//실패시 while문 반복
-			System.out.println("log In 실패!");
-			System.out.println("다시 입력하세요.");
+			System.out.println("         |                                |         ");
+			System.out.println("         |         [log In Fail]          |          ");
+			System.out.println("         |================================|");
+			try {
+				Thread.sleep(2000); // 로그인 Success창 2초 딜레이 준 뒤 다시 ID를 물어본다..)
+			} catch (InterruptedException e) {
+				e.printStackTrace();
+			}
+			DbConn.clearScreen(); //창 클리어
 			}
 		}
 	}

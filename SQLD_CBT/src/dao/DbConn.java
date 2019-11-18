@@ -21,11 +21,18 @@ public class DbConn {
 	public static void driverLoad() {
 		try {
 			Class.forName(DRIVER);
-			System.out.println(">> JDBC Driver Loading Success.");
+//			System.out.println(">> JDBC Driver Loading Success.");
 			result = 1;
 			
 		} catch (ClassNotFoundException e) {
 			System.out.println("[예외발생] 드라이버 로딩 실패!!!");
 		}
 	}
+	
+	public static void clearScreen() { //80칸 공백용 메소드
+		for (int k = 0; k < 80; k++) {
+			System.out.println("");
+		}// clearScreen End
+	}
+	
 }
