@@ -23,7 +23,6 @@ public class Quiz {
 		System.out.println("Quiz방에 입장하셨습니다.");
 		System.out.println("방장 >> 키워드 - sqld1 : 과목 1");
 		System.out.println("방장>> 키워드 - sqld2 : 과목 2");
-		System.out.println("방장>> 키워드 - sqld3 : 과목 3");
 		System.out.println("해당 키워드를 입력 하시면 해당 과목의 문제가 출제됩니다.");
 		
 		while (true) {
@@ -39,13 +38,9 @@ public class Quiz {
 				case "2" :
 					quesPrint(2);
 					break;
-				case "3" :
-					quesPrint(3);
-					break;
 				default :
 					break;
 			}
-			System.out.println(key);
 		}
 	}//main
 	
@@ -114,11 +109,7 @@ public class Quiz {
 		} else if (usrInput.equals("sqld2")) {
 			result = "2";
 			return result;
-		} else if (usrInput.equals("sqld3")) {
-			result = "3";
-			return result;
-		}
-		
+		} 
 		return usrInput;
 	}
 }
