@@ -3,6 +3,7 @@ package dao;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.Calendar;
 
 public class DbConn {
 	
@@ -34,5 +35,25 @@ public class DbConn {
 			System.out.println("");
 		}// clearScreen End
 	}
+	
+	static String getDateTime() {
+		Calendar cal = Calendar.getInstance();
+		int month = cal.get(Calendar.MONTH) + 1;
+		String mm = month < 10 ? "0" + month : ""+ month;
+		
+		int date = cal.get(Calendar.DATE);
+		String dd = date < 10 ? "0" + date : ""+ date;
+		
+		String dateTime = cal.get(Calendar.YEAR) 
+				+ "-" + mm 
+				+ "-" + dd
+				+ " " + cal.get(Calendar.HOUR)	
+				+ ":" + cal.get(Calendar.MINUTE)
+				+ ":" + cal.get(Calendar.SECOND);
+		
+		return dateTime;
+	}
+	
+	
 	
 }

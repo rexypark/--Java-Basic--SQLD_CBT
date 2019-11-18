@@ -29,13 +29,23 @@ public class MockTestDAO {
 		while(mainWhile) {//main while문
 			try {
 				DbConn.conn = DriverManager.getConnection(DbConn.URL, DbConn.USER, DbConn.PASSWORD);
-				System.out.println("|========================================================|");
-				System.out.println("|               환영 합니다 모의고사를 시작하겠습니다.             |");
-				System.out.println("|           SQLD시험은 총 2과목을 시험과목으로 보고 있습니다.        |");
-				System.out.println("|--------------------------------------------------------|");
-				System.out.println("|      1. 데이터 모델링의 이해    |     2. SQL 기본 및 활용                  |");
-				System.out.println("|--------------------------------------------------------|");
+				System.out.println("|=======================================================================|");
+				System.out.println("|                                                                       |");
+				System.out.println("|                                [환영 합니다]                             |");
+				System.out.println("|                      [" + UserDAO.userInfo.getId() + "]님 SQLD 모의고사를 시작하겠습니다                                 |");
+				System.out.println("|                                                                       |");
+				System.out.println("|                시험 시간은 총 90분이며 아래와 같이 문제가 출제된다.                 |");
+				System.out.println("|      (1과목) 데이터 모델링의 이해 : 10문제(문항당 2점) -> 총 20점 ( 8점 미만 과락)    |");
+				System.out.println("|      (2과목) SQL 기본 및 활용     : 40문제(문항당 2점) -> 총 80점 (32점 미만 과락)    |");
+				System.out.println("|    각 과목별로 최소 40% 이상 득점 못할 시에 과락이 되며 총 점수가 '60점' 이상이면 합격이다     |");
+				System.out.println("|                                                                       |");
+				System.out.println("|-----------------------------------------------------------------------|");
+				System.out.println("|         1. 데이터 모델링의 이해                    |         2. SQL 기본 및 활용                  |");
+				System.out.println("|-----------------------------------------------------------------------|");
+				
 				System.out.print("   => 각 과목당 풀 문제의 수를 입력해 주세요 !!! : ");
+				long startTime = System.currentTimeMillis(); //모의고사 시작 시간 Check
+				
 				examValue = scan.nextInt();
 				scan.nextLine();
 				examCount = examValue * 2;
@@ -91,6 +101,9 @@ public class MockTestDAO {
 				 	System.out.println(UserDAO.userInfo.getId());
 					 if (i == 2) {
 						 if (examCount == 0) {
+							 long endTime = System.currentTimeMillis();
+							 System.out.println( "모의고사 시간 : " + ( endTime - startTime )/1000.0 +"초");
+
 							 System.out.println("[1. 데이터 모델링의 이해]  총 문제수 : " +examValue);
 							 System.out.println(" - 정답 : " + success[0] + " 오답 : " + fail[0] + "\t");
 							 System.out.println("[2. SQL 기본 및 활용]    총 문제수 : " +examValue);

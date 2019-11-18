@@ -39,6 +39,8 @@ public class CBT_Main {
 				//logIn
 				LogInSignIn.logIn();
 				
+				
+				
 				break;
 			} else if(choice == 2) {
 				//버퍼 제거
