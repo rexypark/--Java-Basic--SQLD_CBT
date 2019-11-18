@@ -58,7 +58,7 @@ public class UserDAO {
 			e.printStackTrace();
 		} finally {
 			//사용한 객체 close
-			JDBC_Close.closeConnectionStmtRs(DbConn.conn, DbConn.pstmt, DbConn.rs);
+			JDBC_Close.closeConnStmtRs(DbConn.conn, DbConn.pstmt, DbConn.rs);
 			
 		}
 		//result true or false반환
@@ -188,7 +188,7 @@ public class UserDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			JDBC_Close.closeConnectionStmtRs(DbConn.conn, DbConn.pstmt, DbConn.rs);
+			JDBC_Close.closeConnStmtRs(DbConn.conn, DbConn.pstmt, DbConn.rs);
 		}
 		
 		return result;
@@ -244,7 +244,7 @@ public class UserDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			JDBC_Close.closeConnStmtRs(DbConn.conn, DbConn.pstmt);
+			JDBC_Close.closeConnStmt(DbConn.conn, DbConn.pstmt);
 		}
 		
 		//inputUserInfo insert실행이 되었으면 true
