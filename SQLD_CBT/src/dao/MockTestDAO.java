@@ -86,7 +86,7 @@ public class MockTestDAO {
 						 DbConn.clearScreen(); //Enter키 입력시 80칸공백 method 호출
 
 					 } //for문 End
-				 	
+				 	System.out.println(UserDAO.userInfo.getId());
 					 if (i == 2) {
 						 if (examCount == 0) {
 							 System.out.println("[1. 데이터 모델링의 이해]  총 문제수 : " +examValue);
