@@ -125,12 +125,20 @@ public class MockTestDAO {
 							 System.out.println(" - 정답 : " + success[0] + " 오답 : " + fail[0] + "\t");
 							 System.out.println("[2. SQL 기본 및 활용]    총 문제수 : " +examValue);
 							 System.out.println(" - 정답 : " + success[1] + " 오답 : " + fail[1] + "\t");
-							 System.out.print(">>다시 모의고사를 진행 하시겠습니까???  [y/n 입력]  :  ");
-							 answer = scan.nextLine();
-							 if(answer.equals("n")) {
-								 mainWhile = false; //MockTestDAO 종료
+							 
+							 while(true) {//유효성 검사
+								 System.out.print(">>다시 모의고사를 진행 하시겠습니까???  [y/n 입력]  :  ");
+								 answer = scan.nextLine();
+								 if(answer.equals("n")) {
+									 mainWhile = false; //MockTestDAO 종료
+									 break;
+								 } else if(answer.equals("y")) {
+									 break;
+								 } else {
+									 System.out.println("[Error] y또는 n을 입력해 주세요."); 
+								 }
 							 }
-										 
+			 
 						 }
 						 
 					 }//if문 end
