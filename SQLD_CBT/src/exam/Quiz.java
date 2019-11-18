@@ -15,10 +15,7 @@ import dao.JDBC_Close;
 
 public class Quiz {
 	
-	
-	
 	private static Scanner scan = new Scanner(System.in); 
-	
 	
 	public static void quizStart() {
 		Scanner scan = new Scanner(System.in);

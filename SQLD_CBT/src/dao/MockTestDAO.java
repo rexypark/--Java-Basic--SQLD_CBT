@@ -21,8 +21,10 @@ public class MockTestDAO {
 		}
 		DbConn.clearScreen(); // 화면 Clear
 		int examValue; //문제 개수 입력 받는 변수
+		int examCount; //프로그램 종료를 위한 카운트 변수
 		String answer; //문제 정답 입력 받는 변수
 		List<ExamVO> list = new ArrayList<>();
+		
 		boolean mainWhile = true;
 		while(mainWhile) {//main while문
 			try {
@@ -36,6 +38,7 @@ public class MockTestDAO {
 				System.out.print("   => 각 과목당 풀 문제의 수를 입력해 주세요 !!! : ");
 				examValue = scan.nextInt();
 				scan.nextLine();
+				examCount = examValue * 2;
 				int[] success = new int[2]; //정답 카운트용 배열 변수 선언
 				int[] fail = new int[2];    //오답 카운트용 배열 변수 선언
 				
@@ -49,7 +52,7 @@ public class MockTestDAO {
 					
 					DbConn.pstmt = DbConn.conn.prepareStatement(sql.toString());
 					DbConn.rs = DbConn.pstmt.executeQuery();
-				
+					
 					for (int j = 0 ; j < examValue; j++) {
 						while (DbConn.rs.next()) {
 							
@@ -76,6 +79,7 @@ public class MockTestDAO {
 							 System.out.println(" /// 오답입니다 !!! ///\n ");
 							 fail[i - 1] += 1;
 						 }
+						 examCount--;
 						 System.out.println(mvo.getAnswerInfo() + "\n");
 						 System.out.print(">>Enter키를 눌러주시면 다음 문제로 넘어갑니다.");
 						 scan.nextLine();
@@ -84,7 +88,7 @@ public class MockTestDAO {
 					 } //for문 End
 				 	
 					 if (i == 2) {
-						 if (false == DbConn.rs.next()) {
+						 if (examCount == 0) {
 							 System.out.println("[1. 데이터 모델링의 이해]  총 문제수 : " +examValue);
 							 System.out.println(" - 정답 : " + success[0] + " 오답 : " + fail[0] + "\t");
 							 System.out.println("[2. SQL 기본 및 활용]    총 문제수 : " +examValue);
@@ -111,10 +115,5 @@ public class MockTestDAO {
 		}//main while End
 		
 	}//mockTestAll End
-	
-//	public static void main(String[] args) {
-//		MockTestDAO dao = new MockTestDAO();
-//		dao.mockTestAll();
-//	}
 
 }
