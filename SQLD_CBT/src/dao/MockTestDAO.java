@@ -47,9 +47,9 @@ public class MockTestDAO {
 				System.out.print("   => 각 과목당 풀 문제의 수를 입력해 주세요 !!! : ");
 				long startTime = System.currentTimeMillis(); //모의고사 시작 시간 Check
 				
-				while (!scan.hasNextInt()) { //문자열 Check
+				while (!scan.hasNextInt()) { //문자열 유효성 검사
 	                scan.next();
-	                System.err.print("숫자만 입력해 주세요. : ");
+	                System.err.print("[Error] 숫자만 입력 가능합니다  \n  >>> 다시 입력해 주세요 : ");
 				}
 
 				examValue = scan.nextInt();
@@ -92,6 +92,10 @@ public class MockTestDAO {
 						 System.out.println("==============================================================");
 						 System.out.println(mvo.getQwestion());//문제
 						 System.out.print("정답 입력 : ");	
+						while (!scan.hasNextInt()) { //문자열 유효성 검사
+			                scan.next();
+			                System.err.print("[Error] 숫자만 입력 가능합니다  \n  >>> 다시 입력해 주세요 : ");
+						}
 						 answer = scan.nextLine();
 						 
 						 System.out.println("==============================================================");
