@@ -83,24 +83,82 @@ public class LogInSignIn {
 	public static void ConformSignIn() {
 		while (true) {
 			System.out.println("회원가입");
+			System.out.print("사용할 ID 입력 >>");
+			user_id = scan.nextLine();
 			while (true) {
-				System.out.print("사용할 ID 입력 >>");
-				user_id = scan.nextLine();
-				//UserDAO에 있는 checkId메서드를 통해 ID 중복 검사
-				if(userDao.checkId(user_id)) {
+				if(LogRegex.isId(user_id) == 0 || (user_id.length() == 0)) {
+					System.out.println("아이디 형식이 맞지 않습니다.");
+					System.out.println("다시 입력해 주세요.");
+					System.out.print("사용할 ID 입력 >>");
+					user_id = scan.nextLine();
+					
+				} else if (userDao.checkId(user_id)){
+					System.out.println("중복된 아이디가 있습니다.");
 					System.out.println("다시 입력해 주세요");
-				}else {
+					System.out.print("사용할 ID 입력 >>");
+					user_id = scan.nextLine();
+				} else {
 					break;
-				}
+			    }
 			}
+			System.out.print("한글만 입력 가능합니다.");
 			System.out.print("사용할 이름 입력 >>");
 			user_name = scan.nextLine();
+			while (true) {
+				if(LogRegex.isKor(user_name) == 0 || (user_name.length() == 0)) {
+					System.out.println("이름 형식이 맞지 않습니다. [한글 입력]");
+					System.out.println("다시 입력해 주세요.");
+					System.out.print("사용할 이름 입력 >>");
+					user_name = scan.nextLine();
+				} else {
+					break;
+			    }
+			}
+			
+			
+			System.out.println("영문(대소문자 구분), 숫자, 특수문자 조합, 9~12자리");
 			System.out.print("사용할 비밀번호 입력 >>");
 			user_pw = scan.nextLine();
+			while (true) {
+				if(LogRegex.isPW(user_pw) == 0 || (user_pw.length() == 0)) {
+					System.out.println("비밀번호 형식이 맞지 않습니다.");
+					System.out.println("영문(대소문자 구분), 숫자, 특수문자 조합, 9~12자리");
+					System.out.println("다시 입력해 주세요.");
+					System.out.print("사용할 비밀번호 입력 >>");
+					user_pw = scan.nextLine();
+				} else {
+					break;
+			    }
+			}
+			
 			System.out.print("사용할 전화 입력 >>");
 			user_phone = scan.nextLine();
+			while (true) {
+				if(LogRegex.isPhone(user_phone) == 0 || (user_phone.length() == 0)) {
+					System.out.println("전화번호 형식이 맞지 않습니다.");
+					System.out.println("010-1234-1234 / 01012341234 / 010.1234.1234");
+					System.out.println("다시 입력해 주세요.");
+					System.out.print("사용할 전화 입력 >>");
+					user_phone = scan.nextLine();
+				} else {
+					break;
+			    }
+			}
+			
 			System.out.print("사용할 이메일 입력 >>");
 			user_email = scan.nextLine();
+			while (true) {
+				if(LogRegex.isEmail(user_email) == 0 || (user_email.length() == 0)) {
+					System.out.println("전화번호 형식이 맞지 않습니다.");
+					System.out.println("010-1234-1234 / 01012341234 / 010.1234.1234");
+					System.out.println("다시 입력해 주세요.");
+					System.out.print("사용할 전화 입력 >>");
+					user_email = scan.nextLine();
+				} else {
+					break;
+			    }
+			}
+			
 			//signUp에서 insert완료 시 true반환
 			boolean inUserData = userDao.signUp(user_id, user_name, user_pw, user_phone, user_email);
 			
@@ -116,7 +174,6 @@ public class LogInSignIn {
 				System.out.println("회원가입 정상적으로 되지 않았습니다.");
 				System.out.println("다시 입력해주세요");
 			}
-			break;
 		} //전체 while문
 	 }
 }

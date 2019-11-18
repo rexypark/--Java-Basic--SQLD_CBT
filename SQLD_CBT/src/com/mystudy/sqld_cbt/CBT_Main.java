@@ -50,9 +50,7 @@ public class CBT_Main {
 			} else if (choice == 3) {
 				break;
 			}
-			
 		}
-		
 		
 		while (true) {
 			int choice;
