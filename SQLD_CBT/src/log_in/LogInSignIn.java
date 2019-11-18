@@ -16,7 +16,7 @@ public class LogInSignIn {
 	private static String user_email = "";
 	private static Scanner scan = new Scanner(System.in);
 	private static UserDAO userDao = new UserDAO();
-	public static String exit = "exit";
+	public static int exit = 0;
 	
 	//로그인 메서드
 	public static void logIn() {
@@ -33,6 +33,10 @@ public class LogInSignIn {
 			System.out.println("         |         ID : _________         |         ");
 			System.out.print("                  ID 입력 : ");
 			user_id = scan.nextLine();
+			if (user_id.equals("exit")) {
+				exit = 1;
+				break;
+			}
 			DbConn.clearScreen();
 			System.out.println("         |================================|");
 			System.out.println("         |    [SQLD CBT Program Login]    |         ");
@@ -41,6 +45,10 @@ public class LogInSignIn {
 			System.out.println("                  PW : _________                  ");
 			System.out.print("                 PW 입력 : ");
 			user_pw = scan.nextLine();
+			if (user_pw.equals("exit")) {
+				exit = 1;
+				break;
+			}
 			DbConn.clearScreen();
 			System.out.println("         |================================|");
 			System.out.println("         |    [SQLD CBT Program Login]    |         ");
@@ -86,7 +94,8 @@ public class LogInSignIn {
 			System.out.println("exit 입력 시 log in 창으로 갑니다.");
 			System.out.print("사용할 ID 입력 >>");
 			user_id = scan.nextLine();
-			if (exit.equals(user_id)) {
+			if (user_id.equals("exit")) {
+				exit = 1;
 				break;
 			}
 			while (true) {
@@ -108,6 +117,10 @@ public class LogInSignIn {
 			System.out.print("한글만 입력 가능합니다.");
 			System.out.print("사용할 이름 입력 >>");
 			user_name = scan.nextLine();
+			if (user_name.equals("exit")) {
+				exit = 1;
+				break;
+			}
 			while (true) {
 				if(LogRegex.isKor(user_name) == 0 || (user_name.length() == 0)) {
 					System.out.println("이름 형식이 맞지 않습니다. [한글 입력]");
@@ -123,6 +136,10 @@ public class LogInSignIn {
 			System.out.println("영문(대소문자 구분), 숫자, 특수문자 조합, 9~12자리");
 			System.out.print("사용할 비밀번호 입력 >>");
 			user_pw = scan.nextLine();
+			if (user_pw.equals("exit")) {
+				exit = 1;
+				break;
+			}
 			while (true) {
 				if(LogRegex.isPW(user_pw) == 0 || (user_pw.length() == 0)) {
 					System.out.println("비밀번호 형식이 맞지 않습니다.");
@@ -137,6 +154,10 @@ public class LogInSignIn {
 			
 			System.out.print("사용할 전화 입력 >>");
 			user_phone = scan.nextLine();
+			if (user_phone.equals("exit")) {
+				exit = 1;
+				break;
+			}
 			while (true) {
 				if(LogRegex.isPhone(user_phone) == 0 || (user_phone.length() == 0)) {
 					System.out.println("전화번호 형식이 맞지 않습니다.");
@@ -151,6 +172,10 @@ public class LogInSignIn {
 			
 			System.out.print("사용할 이메일 입력 >>");
 			user_email = scan.nextLine();
+			if (user_email.equals("exit")) {
+				exit = 1;
+				break;
+			}
 			while (true) {
 				if(LogRegex.isEmail(user_email) == 0 || (user_email.length() == 0)) {
 					System.out.println("이메일 형식이 맞지 않습니다.");

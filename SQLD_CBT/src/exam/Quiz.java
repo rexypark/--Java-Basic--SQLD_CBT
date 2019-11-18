@@ -41,6 +41,11 @@ public class Quiz {
 				default :
 					break;
 			}
+			if (key =="1" || key =="2") {
+				continue;
+			} else {
+				System.out.println(key);	
+			}
 		}
 	}//main
 	
