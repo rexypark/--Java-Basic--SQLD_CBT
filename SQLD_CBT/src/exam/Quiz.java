@@ -58,18 +58,20 @@ public class Quiz {
 		String userAnswer;
 		System.out.println("===========================");
 		System.out.println(vo.getQwestion());//문제
-		
-		System.out.println("---------------------------");
-		System.out.println(">>");
+		System.out.print("정답 입력 : ");	
+
 		userAnswer = scan.nextLine();
+		System.out.println("==============================================================");
 		if(userAnswer.equals(vo.getAnswer())) {
-			System.out.println("정답이다");
+			System.out.println(" /// 정답입니다 !!! ///\n");
+
 		}else {
-			System.out.println("땡!!!!");
+			System.out.println(" /// 오답입니다 !!! ///\n ");
 		}
-		System.out.println("정답 : " + vo.getAnswer());
-		System.out.println("해설 : " + vo.getAnswerInfo());
-		System.out.println("---------------------------");
+		System.out.println(vo.getAnswerInfo() + "\n");
+		System.out.print(">>Enter키를 눌러주시면 다음 문제로 넘어갑니다.");
+		scan.nextLine();
+		
 	}
 	
 	public static ExamVO selectQues(int section) {

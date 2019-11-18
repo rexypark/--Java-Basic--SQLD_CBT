@@ -19,7 +19,7 @@ public class MockTestDAO {
 		if (DbConn.result == 0) {
 			DbConn.driverLoad();
 		}
-		
+		DbConn.clearScreen(); // 화면 Clear
 		int examValue; //문제 개수 입력 받는 변수
 		String answer; //문제 정답 입력 받는 변수
 		List<ExamVO> list = new ArrayList<>();
@@ -71,17 +71,14 @@ public class MockTestDAO {
 						 System.out.println("==============================================================");
 						 if(answer.equals(mvo.getAnswer())) {
 							 System.out.println(" /// 정답입니다 !!! ///\n");
-							 System.out.println(mvo.getAnswerInfo() + "\n");
 							 success[i - 1] += 1;
-							 System.out.print(">>Enter키를 눌러주시면 다음 문제로 넘어갑니다.");
-							 scan.nextLine();
 						 }else {
 							 System.out.println(" /// 오답입니다 !!! ///\n ");
-							 System.out.println(mvo.getAnswerInfo() + "\n");
 							 fail[i - 1] += 1;
-							 System.out.print(">>Enter키를 눌러주시면 다음 문제로 넘어갑니다.");
-							 scan.nextLine();
 						 }
+						 System.out.println(mvo.getAnswerInfo() + "\n");
+						 System.out.print(">>Enter키를 눌러주시면 다음 문제로 넘어갑니다.");
+						 scan.nextLine();
 						 DbConn.clearScreen(); //Enter키 입력시 80칸공백 method 호출
 
 					 } //for문 End
