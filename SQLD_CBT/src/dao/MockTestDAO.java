@@ -74,9 +74,11 @@ public class MockTestDAO {
 						 System.out.println("==============================================================");
 						 if(answer.equals(mvo.getAnswer())) {
 							 System.out.println(" /// 정답입니다 !!! ///\n");
+						      ExamDAO.insertOne(mvo ,"o");
 							 success[i - 1] += 1;
 						 }else {
 							 System.out.println(" /// 오답입니다 !!! ///\n ");
+						      ExamDAO.insertOne(mvo ,"x");
 							 fail[i - 1] += 1;
 						 }
 						 examCount--;
