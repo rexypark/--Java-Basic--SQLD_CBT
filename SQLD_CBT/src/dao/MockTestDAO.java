@@ -46,6 +46,12 @@ public class MockTestDAO {
 				
 				System.out.print("   => 각 과목당 풀 문제의 수를 입력해 주세요 !!! : ");
 				long startTime = System.currentTimeMillis(); //모의고사 시작 시간 Check
+				
+				while (!scan.hasNextInt()) { //문자열 Check
+	                scan.next();
+	                System.err.print("숫자만 입력해 주세요. : ");
+				}
+
 				examValue = scan.nextInt();
 				scan.nextLine();
 				examCount = examValue * 2;
