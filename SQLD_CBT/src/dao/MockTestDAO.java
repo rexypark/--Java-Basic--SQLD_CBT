@@ -120,7 +120,9 @@ public class MockTestDAO {
 							 double chapter2 = Double.parseDouble(String.format("%.2f",((double) success[1] / (double) examValue) * 100));
 							 scoreList = new ArrayList<>();
 							 scoreList = dbSearch(2, 1);
-//							 scoreList.
+							 for (ExamVO mvo : scoreList) {
+								 
+							 }
 							 System.out.println("===========================");
 							 System.out.println(UserDAO.userInfo.getId() + "님의 모의고사 진행결과  ");
 							 System.out.println(" - 총 진행시간 : " + ( endTime - startTime )/1000.0 +"초");
