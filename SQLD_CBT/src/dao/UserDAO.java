@@ -199,7 +199,7 @@ public class UserDAO {
 	// LOG > true이면 userLog id, name, act(회원가입)
 	// 저장하면 result 1을 반환
 	// user정보를 입력 받아 
-	public boolean signUp(String id, String name, String pw, String phone, String email) {
+	public static boolean signUp(String id, String name, String pw, String phone, String email) {
 		boolean signUpcmpt = false;
 		//DB 드라이버 연결
 		if (DbConn.result == 0) {
