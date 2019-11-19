@@ -35,7 +35,15 @@ public class CBT_Main {
 				System.out.print("   => 번호를 입력해 주세요 !!! : ");
 				
 				choice = scan.nextInt();
+				
+				
+				
 				while (true) {
+					if (choice == 3) {
+						System.out.println("로그아웃 되셨습니다.");
+						logOut = false;
+						break;
+					}
 					if (choice == 1) {
 						// 버퍼 제거
 						scan.nextLine();
@@ -60,24 +68,20 @@ public class CBT_Main {
 							LogInSignIn.exit = 0;
 							break;
 						}
-						while (true) {
-							int choice2;
-							System.out.println("1. quiz   2. selfTest 3. exit");
-							choice2 = scan.nextInt();
-							if (choice2 == 1) {
-								Quiz.quizStart();
-							} else if (choice2 == 2) {
-								MockTestDAO.mockTestAll();
-							} else {
-								break;
-							}
-						} // while
 					}
-					if (choice == 3) {
-						System.out.println("로그아웃 되셨습니다.");
-						logOut = false;
-						break;
-					}
+					while (true) {
+						int choice2;
+						System.out.println("1. quiz   2. selfTest 3. exit");
+						choice2 = scan.nextInt();
+						if (choice2 == 1) {
+							Quiz.quizStart();
+						} else if (choice2 == 2) {
+							MockTestDAO.mockTestAll();
+						} else {
+							break;
+						}
+					} // while
+					
 				}
 				
 		}
