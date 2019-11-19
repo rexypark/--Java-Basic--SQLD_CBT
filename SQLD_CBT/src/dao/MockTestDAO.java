@@ -22,6 +22,9 @@ public class MockTestDAO {
 		int examCount; //프로그램 종료를 위한 카운트 변수
 		String answer; //문제 정답 입력 받는 변수
 		List<ExamVO> list = new ArrayList<>();
+		List<ExamVO> reList1 = new ArrayList<>();
+		List<ExamVO> reList2 = new ArrayList<>();
+		List<ExamVO> scoreList = new ArrayList<>();
 		
 		boolean mainWhile = true;
 		while(mainWhile) {//main while문
@@ -54,7 +57,7 @@ public class MockTestDAO {
 				DbConn.clearScreen(); // 화면 Clear
 				int[] success = new int[2]; //정답 카운트용 배열 변수 선언
 				int[] fail = new int[2];    //오답 카운트용 배열 변수 선언
-				
+				reList1 = new ArrayList<>();
 				for (int i = 1; i <= 2 ; i++) { //SELECT FOR문 시작
 					StringBuilder sql = new StringBuilder();
 					if (DbConn.result == 0) {
@@ -101,7 +104,7 @@ public class MockTestDAO {
 							 System.out.println(" /// 오답입니다 !!! ///\n ");
 						      ExamDAO.insertOne(mvo ,"x");
 							 fail[i - 1] += 1;
-							 
+							 reList1.add(mvo); //틀린 문제를 다시 풀 수 있도록 reList에 담는다.
 						 }
 						 examCount--;
 						 System.out.println(mvo.getAnswerInfo() + "\n");
@@ -112,29 +115,53 @@ public class MockTestDAO {
 					 } //for문 End
 					 if (i == 2) {
 						 if (examCount == 0) {
-//							 System.out.println(UserDAO.userInfo.getId());
 							 long endTime = System.currentTimeMillis();
-							 System.out.println(UserDAO.userInfo.getId() + "님의 모의고사 진행시간 : " + ( endTime - startTime )/1000.0 +"초");
-
-							 System.out.println("[1. 데이터 모델링의 이해]  총 문제수 : " +examValue);
-							 System.out.println(" - 정답 : " + success[0] + " 오답 : " + fail[0] + "\t");
-							 System.out.println("[2. SQL 기본 및 활용]    총 문제수 : " +examValue);
-							 System.out.println(" - 정답 : " + success[1] + " 오답 : " + fail[1] + "\t");
-							 
+							 double chapter1 = Double.parseDouble(String.format("%.2f",((double) success[0] / (double) examValue) * 100));
+							 double chapter2 = Double.parseDouble(String.format("%.2f",((double) success[1] / (double) examValue) * 100));
+							 scoreList = new ArrayList<>();
+							 scoreList = dbSearch(2, 1);
+//							 scoreList.
+							 System.out.println("===========================");
+							 System.out.println(UserDAO.userInfo.getId() + "님의 모의고사 진행결과  ");
+							 System.out.println(" - 총 진행시간 : " + ( endTime - startTime )/1000.0 +"초");
+							 System.out.println(" - [1과목. 데이터 모델링의 이해]  ");
+							 System.out.println("    - 문제수 : " + examValue +         "|" + "총 문제풀이수 : " );
+							 System.out.println("    - 정답 : " + success[0] + "개   |" + " 오답 : " + fail[0] + "개"+         "|" );
+							 System.out.println("    - 정답률 : " + chapter1 + "%"+         "|" );
+							 System.out.println();
+							 System.out.println(" - [2과목. SQL 기본 및 활용]  ");
+							 System.out.println("    - 문제수 : " + examValue+         "|" );
+							 System.out.println("    - 정답 : " + success[1] + "개   |" + " 오답 : " + fail[1] + "개"+         "|" );
+							 System.out.println("    - 정답률 : " + chapter2 + "%"+         "|" );
+							 System.out.println("===========================");
+							 System.out.println();
+					 
 							 
 							 while(true) {//유효성 검사
-								 System.out.print(">>다시 모의고사를 진행 하시겠습니까???  [y/n 입력]  :  ");
+								 reList2 = new ArrayList<>();
+								 System.out.print(">> 틀린문제를 다시 푸시겠습니까????  [y/n 입력]  :  ");
 								 answer = scan.nextLine();
-								 if(answer.equals("n")) {
-									 mainWhile = false; //MockTestDAO 종료
-									 break;
-								 } else if(answer.equals("y")) {
-									 break;
+								 System.out.println();
+								 if(answer.equals("y")) { //y 입력시 오답문제만 다시 풀 수 있도록 출력
+									reList2 = reExam(reList1);
+									reList1 = reList2;
+								 } else if(answer.equals("n")) { //n 입력시 모의고사 진행 여부를 물어본다.
+									 System.out.print(">> 다시 모의고사를 진행 하시겠습니까???  [y/n 입력]  :  ");
+									 answer = scan.nextLine();
+									 System.out.println();
+									 if(answer.equals("n")) { //mockTestAll 종료
+										 mainWhile = false; 
+										 break;
+									 } else if(answer.equals("y")) { //mockTestAll 다시 시작
+										 break;
+									 } else {
+										 System.out.println("[Error] y또는 n을 입력해 주세요."); 
+									 }
 								 } else {
 									 System.out.println("[Error] y또는 n을 입력해 주세요."); 
 								 }
 							 }
-			 
+							 
 						 }
 						 
 					 }//if문 end
@@ -151,5 +178,88 @@ public class MockTestDAO {
 		}//main while End
 		
 	}//mockTestAll End
-
+	
+	public static List<ExamVO> reExam(List<ExamVO> List) {
+		String answer;
+		int success = 0;
+		int fail = 0;
+		List<ExamVO> reList = new ArrayList<>();
+		for (ExamVO mvo : List ) { // examValue만큼 문제를 보여준다.  
+			 System.out.println("==============================================================");
+			 System.out.println(mvo.getQwestion());//문제
+			 System.out.print("정답 입력 : ");	
+			while (!scan.hasNextInt()) { //문자열 유효성 검사
+               scan.next();
+               System.err.print("[Error] 숫자만 입력 가능합니다  \n  >>> 다시 입력해 주세요 : ");
+			}
+			 answer = scan.nextLine();
+			 
+			 System.out.println("==============================================================");
+			 if(answer.equals(mvo.getAnswer())) {
+				 System.out.println(" /// 정답입니다 !!! ///\n");
+			      ExamDAO.insertOne(mvo ,"o");
+			      success += 1;
+			 }else {
+				 System.out.println(" /// 오답입니다 !!! ///\n ");
+			      ExamDAO.insertOne(mvo ,"x");
+			      reList.add(mvo); //틀린 문제를 다시 풀 수 있도록 reList에 담는다.
+			      fail += 1;
+			 }
+			 System.out.println(mvo.getAnswerInfo() + "\n");
+			 System.out.print(">>Enter키를 눌러주시면 다음 문제로 넘어갑니다.");
+			 scan.nextLine();
+			 DbConn.clearScreen(); //Enter키 입력시 80칸공백 method 호출 
+		}
+		
+		 System.out.println(" - [오답문제 결과]  ");
+		 System.out.println("    - 문제수 : " + (success + fail));
+		 System.out.println("    - 정답 : " + success + "개   |" + " 오답 : " + fail + "개");
+		 System.out.println();
+		 
+		 return reList;
+		
+	}// reExam End
+	
+	
+	public static List<ExamVO> dbSearch(int index, int exam) {
+		
+		List<ExamVO> dbSearch = new ArrayList<>();
+		
+		for (int i = 1; i <= 2 ; i++) { //SELECT FOR문 시작
+			StringBuilder sql = new StringBuilder();
+			if (DbConn.result == 0) {
+				DbConn.driverLoad();
+			}
+			try {
+	
+				if(index ==2) { // SCORE_INFO 가져오는 거
+					dbSearch = new ArrayList<>();
+					sql.append("SELECT ");
+					sql.append("(Select count(*) From SCORE_INFO WHERE S_USER_ID = '" + UserDAO.userInfo.getId() +"' AND S_SECTION =  " + i + ")as total");
+					sql.append(",(select count(*) FROM SCORE_INFO WHERE S_USER_ID = '"+ UserDAO.userInfo.getId() +"' AND S_SECTION =  " + i + "AND O_X = 'o')as o_total" );
+					sql.append(",(select count(*) FROM SCORE_INFO WHERE S_USER_ID = '"+ UserDAO.userInfo.getId() +"' AND S_SECTION =  " + i + "AND O_X = 'x')as x_total");
+					sql.append("FROM SCORE_INFO ");
+					sql.append("WHERE ROWNUM = 1 ");
+					
+					DbConn.pstmt = DbConn.conn.prepareStatement(sql.toString());
+					DbConn.rs = DbConn.pstmt.executeQuery();
+					DbConn.conn = DriverManager.getConnection(DbConn.URL, DbConn.USER, DbConn.PASSWORD);
+						
+						dbSearch.add(new ExamVO(DbConn.rs.getString("total"),
+												DbConn.rs.getString("o_total"),
+												DbConn.rs.getString("x_total")));
+				}
+				
+			} catch (SQLException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+						
+			
+		}//SELECT for문 End
+		
+		return dbSearch;
+	
+	}//dbSearch method End
+			
 }
