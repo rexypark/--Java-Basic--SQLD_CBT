@@ -139,6 +139,7 @@ public class TCPServerMultiChat {
 						//String id에 로그인에 입력한
 						//id를 입력한다.
 						id = ServerVO.user_id;
+						System.out.println("id찍어볼꼐요~~" + id);
 						//clients Map에 입력받은 아이디와 dos out을 입력하여
 						//해당 quiz방에 들어온 인원들을 저장한다.
 						clients.put(id, out);
@@ -149,10 +150,11 @@ public class TCPServerMultiChat {
 							if (choice.equals("1")) {
 								// 전체에게 접속한 사람 알림
 								sendToAll("#" + id + "님이 입장하셨습니다.");
+								System.out.println("id찍어볼꼐요~~" + id);
 								//ServerQuiz에 quizStart메소드에 dis in, dos out을 입력
 								//quiz방에 접속하고 모든 사람과 채팅 가능 
 								//exit를 눌러야 break; 방을 빠져 나올 수 있다.
-								ServerQuiz.quizStart(in,out);
+								ServerQuiz.quizStart(in,out,id);
 							} else if (choice.equals("2")) {
 								MockTestDAO.mockTestAll();
 							} else {

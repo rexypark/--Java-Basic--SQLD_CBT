@@ -20,7 +20,7 @@ public class ServerQuiz {
 
 	private static Scanner scan = new Scanner(System.in);
 
-	public static void quizStart(DataInputStream in, DataOutputStream out ) throws IOException {
+	public static void quizStart(DataInputStream in, DataOutputStream out, String id) throws IOException {
 		Scanner scan = new Scanner(System.in);
 		String input;
 		String key;
@@ -30,7 +30,7 @@ public class ServerQuiz {
 		out.writeUTF("해당 키워드를 입력 하시면 해당 과목의 문제가 출제됩니다.");
 		while (true) {
 			
-			out.writeUTF(dao.UserDAO.userInfo.getId() + " >>");
+//			out.writeUTF(dao.UserDAO.userInfo.getId() + " >>");
 			// 1
 			try {
 				key = in.readUTF();
@@ -38,7 +38,8 @@ public class ServerQuiz {
 					break;
 				
 				if (key.equals("1") || key.equals("2")) {
-					TCPServerMultiChat.ServerReceiver.sendToAll(TCPServerMultiChat.ServerReceiver.id+ " >> " + key);
+//					TCPServerMultiChat.ServerReceiver.sendToAll(TCPServerMultiChat.ServerReceiver.id+ " >> " + key);
+					TCPServerMultiChat.ServerReceiver.sendToAll(id+ " >> " + key);
 				} else {
 				switch (keyword(key)) {
 				case "1":
@@ -50,7 +51,8 @@ public class ServerQuiz {
 				default:
 					break;
 				}
-					TCPServerMultiChat.ServerReceiver.sendToAll(TCPServerMultiChat.ServerReceiver.id+ " >> " + key);
+//					TCPServerMultiChat.ServerReceiver.sendToAll(TCPServerMultiChat.ServerReceiver.id+ " >> " + key);
+					TCPServerMultiChat.ServerReceiver.sendToAll(id+ " >> " + key);
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block

@@ -21,7 +21,7 @@ public class TCPClientMultiChat {
 		Socket socket = null;
 		// "192.168.0.100"
 		try {
-			socket = new Socket("192.168.0.69", 10000);
+			socket = new Socket("192.168.0.58", 10000);
 
 			// 메세지 보내기 쓰래드 생성 실행(쓰레드로 동작)
 			ClientSender clientSender = new ClientSender(socket);
