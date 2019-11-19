@@ -17,8 +17,6 @@ public class MockTestDAO {
 
 	public static void mockTestAll() {
 		
-		
-
 		DbConn.clearScreen(); // 화면 Clear
 		int examValue; //문제 개수 입력 받는 변수
 		int examCount; //프로그램 종료를 위한 카운트 변수
@@ -28,8 +26,6 @@ public class MockTestDAO {
 		boolean mainWhile = true;
 		while(mainWhile) {//main while문
 			try {
-
-//				DbConn.conn = DriverManager.getConnection(DbConn.URL, DbConn.USER, DbConn.PASSWORD);
 				System.out.println("|=======================================================================|");
 				System.out.println("|                                                                       |");
 				System.out.println("|                                [환영 합니다]                             |");
@@ -71,9 +67,7 @@ public class MockTestDAO {
 					sql.append("WHERE SECTION = " + i);
 					sql.append(" ORDER BY DBMS_RANDOM.VALUE"); //랜덤으로 데이터를 가져 온다.
 					
-					System.out.println("i의 값 : " + i);
 					DbConn.pstmt = DbConn.conn.prepareStatement(sql.toString());
-					System.out.println("???????");
 					DbConn.rs = DbConn.pstmt.executeQuery();
 					
 					for (int j = 0 ; j < examValue; j++) {
@@ -107,6 +101,7 @@ public class MockTestDAO {
 							 System.out.println(" /// 오답입니다 !!! ///\n ");
 						      ExamDAO.insertOne(mvo ,"x");
 							 fail[i - 1] += 1;
+							 
 						 }
 						 examCount--;
 						 System.out.println(mvo.getAnswerInfo() + "\n");
@@ -117,14 +112,15 @@ public class MockTestDAO {
 					 } //for문 End
 					 if (i == 2) {
 						 if (examCount == 0) {
-							 System.out.println(UserDAO.userInfo.getId());
+//							 System.out.println(UserDAO.userInfo.getId());
 							 long endTime = System.currentTimeMillis();
-							 System.out.println( "모의고사 경과시간 : " + ( endTime - startTime )/1000.0 +"초");
+							 System.out.println(UserDAO.userInfo.getId() + "님의 모의고사 진행시간 : " + ( endTime - startTime )/1000.0 +"초");
 
 							 System.out.println("[1. 데이터 모델링의 이해]  총 문제수 : " +examValue);
 							 System.out.println(" - 정답 : " + success[0] + " 오답 : " + fail[0] + "\t");
 							 System.out.println("[2. SQL 기본 및 활용]    총 문제수 : " +examValue);
 							 System.out.println(" - 정답 : " + success[1] + " 오답 : " + fail[1] + "\t");
+							 
 							 
 							 while(true) {//유효성 검사
 								 System.out.print(">>다시 모의고사를 진행 하시겠습니까???  [y/n 입력]  :  ");
