@@ -108,7 +108,7 @@ public class ServerMockTest {
 							}
 						}
 						while (true) {
-							if (Integer.parseInt(answer) <= 4 && Integer.parseInt(answer)>=1) {
+							if (Integer.parseInt(answer) <= 4 && Integer.parseInt(answer)>=1 && LogRegex.isiInt(answer) && answer != null) {
 								break;
 							} else {
 									out.writeUTF("1 - 4 사이의 숫자만 입력 가능합니다. \n  >>> 다시입력하세요.");
@@ -242,7 +242,7 @@ public class ServerMockTest {
 				}
 			}
 			while (true) {
-				if (Integer.parseInt(answer) <= 4 && Integer.parseInt(answer)>=1) {
+				if (Integer.parseInt(answer) <= 4 && Integer.parseInt(answer)>=1 && LogRegex.isiInt(answer) && answer != null) {
 					break;
 				} else {
 						out.writeUTF("1 - 4 사이의 숫자만 입력 가능합니다. \n  >>> 다시입력하세요.");
