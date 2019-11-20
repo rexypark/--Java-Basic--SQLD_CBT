@@ -93,28 +93,53 @@ public class ServerMockTest {
 							break;
 						}
 					}
-
+					boolean test = true;
 					for (ExamVO mvo : list) { // examValue만큼 문제를 보여준다.
 						out.writeUTF("==============================================================");
 						out.writeUTF(mvo.getQwestion());// 문제
 						out.writeUTF("정답 입력 : ");
+						out.writeUTF("여기다: ");
 						answer = in.readUTF();
+						
 						while (true) { // 문자열 유효성 검사
-							if (LogRegex.isiInt(answer)) {
-								break;
-							} else {
-								out.writeUTF("[Error] 숫자만 입력 가능합니다  \n  >>> 다시 입력해 주세요 : ");
-								answer = in.readUTF();
-							}
-						}
-						while (true) {
-							if (Integer.parseInt(answer) <= 4 && Integer.parseInt(answer)>=1 && LogRegex.isiInt(answer) && answer != null) {
-								break;
-							} else {
-									out.writeUTF("1 - 4 사이의 숫자만 입력 가능합니다. \n  >>> 다시입력하세요.");
-									answer = in.readUTF();
-							}
-						}
+		                     if (answer.length() == 0) {
+		                        out.writeUTF("1 - 4 사이의 숫자만 입력 가능합니다. \n  >>> 다시입력하세요.");
+		                        answer = in.readUTF();
+		                     }
+		                     if (!LogRegex.isiInt(answer)) {
+		                        out.writeUTF("[Error] 숫자만 입력 가능합니다  \n  >>> 다시 입력해 주세요 : ");
+		                        answer = in.readUTF();
+		                     }
+		                     if (Integer.parseInt(answer) <= 4 && Integer.parseInt(answer)>=1) {
+		                        break;
+		                     } else {
+		                           out.writeUTF("1 - 4 사이의 숫자만 입력 가능합니다. \n  >>> 다시입력하세요.");
+		                           answer = in.readUTF();
+		                     }
+		                  }
+//						while (test) { // 문자열 유효성 검사
+//							while (true) {
+//								if (LogRegex.isiInt(answer)) {
+//									break;
+//								} else {
+//									out.writeUTF("[Error] 숫자만 입력 가능합니다  \n  >>> 다시 입력해 주세요 : ");
+//									answer = in.readUTF();
+//									break;
+//								}
+//							}
+//							
+//							while (true) {
+//								if (Integer.parseInt(answer) <= 4 && Integer.parseInt(answer)>=1) {
+//									test = false;
+//									break;
+//								} else {
+//									out.writeUTF("1 - 4 사이의 숫자만 입력 가능합니다. \n  >>> 다시입력하세요.");
+//									answer = in.readUTF();
+//									test = true;
+//									break;
+//								}
+//							}
+//						}
 						
 						out.writeUTF("==============================================================");
 						if (answer.equals(mvo.getAnswer())) {

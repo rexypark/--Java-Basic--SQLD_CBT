@@ -26,10 +26,10 @@ public class ServerVO {
 		UserDAO userDao = new UserDAO();
 		while (true) {
 			try {
-				out.writeUTF("         |================================|\n");
-				out.writeUTF("         |    [SQLD CBT Program Login]    |         \n");
-				out.writeUTF("         |                                |         \n");
-				out.writeUTF("         |         ID : _________         |         \n");
+				out.writeUTF("         |================================|");
+				out.writeUTF("         |    [SQLD CBT Program Login]    |         ");
+				out.writeUTF("         |                                |         ");
+				out.writeUTF("         |         ID : _________         |         ");
 				out.writeUTF("                  ID 입력 : ");
 				user_id = in.readUTF();
 
@@ -39,11 +39,11 @@ public class ServerVO {
 				}
 
 				DbConn.clearScreen();
-				out.writeUTF("         |================================|\n");
-				out.writeUTF("         |    [SQLD CBT Program Login]    |         \n");
-				out.writeUTF("         |                                |         \n");
-				out.writeUTF("                  ID : " + user_id + "              \n");
-				out.writeUTF("                  PW : _________                  \n");
+				out.writeUTF("         |================================|");
+				out.writeUTF("         |    [SQLD CBT Program Login]    |         ");
+				out.writeUTF("         |                                |         ");
+				out.writeUTF("                  ID : " + user_id + "              ");
+				out.writeUTF("                  PW : _________                  ");
 				out.writeUTF("                 PW 입력 : ");
 				user_pw = in.readUTF();
 				if (user_pw.equals("exit")) {
@@ -51,16 +51,16 @@ public class ServerVO {
 					break;
 				}
 				DbConn.clearScreen();
-				out.writeUTF("         |================================|\n");
-				out.writeUTF("         |    [SQLD CBT Program Login]    |         \n");
-				out.writeUTF("         |                                |         \n");
-				out.writeUTF("                  ID : " + user_id + "              \n");
-				out.writeUTF("                  PW : " + user_pw + "              \n");
+				out.writeUTF("         |================================|");
+				out.writeUTF("         |    [SQLD CBT Program Login]    |         ");
+				out.writeUTF("         |                                |         ");
+				out.writeUTF("                  ID : " + user_id + "              ");
+				out.writeUTF("                  PW : " + user_pw + "              ");
 
 				if (userDao.checkIdPassword(user_id, user_pw)) {
-					out.writeUTF("         |                                |         \n");
-					out.writeUTF("         |        [log In Success]        |         \n");
-					out.writeUTF("         |================================|\n");
+					out.writeUTF("         |                                |         ");
+					out.writeUTF("         |        [log In Success]        |         ");
+					out.writeUTF("         |================================|");
 					UserVO logUser = userDao.userInfo;
 					try {
 						Thread.sleep(2000); // 로그인 Success창 2초 딜레이 준 뒤 다음 스텝으로 넘어간다.)
