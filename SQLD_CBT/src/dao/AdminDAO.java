@@ -29,12 +29,12 @@ public class AdminDAO {
 			String select = in.readUTF();
 			out.writeUTF("|========================================================|");
 			JDBCConn.clearScreen(in,out);
-			if (select == "1") nowUserList(in, out); 
-			if (select == "2") {
+			if (select.equals("1")) nowUserList(in, out); 
+			if (select.equals("2")) {
 				 List<UserVO> list = selectAll();
 				 userListAll(list, in, out); 
 			}
-			if (select == "3") break;
+			if (select.equals("3")) break;
 		}
 	
 	}
