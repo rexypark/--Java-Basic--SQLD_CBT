@@ -124,7 +124,6 @@ public class MockTestDAO {
 							 scoreList = dbSearch(2, 1);
 							 int index = 0;
 							 for (ExamVO mvo : scoreList) {
-								 System.out.println(mvo.getAllTotal() +"  " +mvo.getxTotal()  +"  " + mvo.getoTotal());
 								 allTotal[index] = Integer.parseInt(mvo.getAllTotal());
 								 xTotal[index] = Integer.parseInt(mvo.getxTotal());
 								 oTotal[index] = Integer.parseInt(mvo.getoTotal());
@@ -276,8 +275,6 @@ public class MockTestDAO {
 			
 		}//SELECT for¹® End
 		
-		System.out.println(dbSearch.get(0));
-		System.out.println(dbSearch.get(1));
 		return dbSearch;
 	
 	}//dbSearch method End
