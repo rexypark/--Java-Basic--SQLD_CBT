@@ -1,10 +1,16 @@
 package dao;
 
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Calendar;
+
+import cbt_mulit_socket.CBTServer;
+import cbt_mulit_socket.CBTServer.ServerReceiver;
 
 public class JDBCConn {
 	
@@ -63,9 +69,9 @@ public class JDBCConn {
 		}
 	}
 	
-	public static void clearScreen() { //80칸 공백용 메소드
+	public static void clearScreen(DataInputStream in, DataOutputStream out) throws IOException { //80칸 공백용 메소드
 		for (int k = 0; k < 80; k++) {
-			System.out.println("");
+			out.writeUTF("");
 		}// clearScreen End
 	}
 	

@@ -214,7 +214,7 @@ public class CBTServer {
 		public static void choiceRoom(DataInputStream in, DataOutputStream out, String id) throws IOException {
 			while (true) {
 				String choice;
-				JDBCConn.clearScreen();
+				JDBCConn.clearScreen(in,out);
 				out.writeUTF("============================================================================");
 				out.writeUTF("  1. 한 문제씩 풀기(여러명)  |   2. 모의고사 보기(개인)   |  3. 로그아웃(초기 메인화면 복귀) ");
 				out.writeUTF("============================================================================");

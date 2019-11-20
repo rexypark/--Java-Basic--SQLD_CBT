@@ -51,7 +51,7 @@ public class ServerDAO {
 					break;
 				}
 
-				JDBCConn.clearScreen();
+				JDBCConn.clearScreen(in,out);
 				out.writeUTF("         |================================|");
 				out.writeUTF("         |    [SQLD CBT Program Login]    |         ");
 				out.writeUTF("         |                                |         ");
@@ -63,7 +63,7 @@ public class ServerDAO {
 					exit = 1;
 					break;
 				}
-				JDBCConn.clearScreen();
+				JDBCConn.clearScreen(in,out);
 				out.writeUTF("         |================================|");
 				out.writeUTF("         |    [SQLD CBT Program Login]    |         ");
 				out.writeUTF("         |                                |         ");

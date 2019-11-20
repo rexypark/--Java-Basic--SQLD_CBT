@@ -26,7 +26,7 @@ public class MockTest {
 
 	public static void mockTestAll(DataInputStream in, DataOutputStream out, String id) throws IOException {
 
-		JDBCConn.clearScreen(); // 화면 Clear
+		JDBCConn.clearScreen(in,out); // 화면 Clear
 		String examValue; // 문제 개수 입력 받는 변수
 		int examCount; // 프로그램 종료를 위한 카운트 변수
 		String answer; // 문제 정답 입력 받는 변수
@@ -65,7 +65,7 @@ public class MockTest {
 					}
 				}
 				examCount = Integer.parseInt(examValue) * 2;
-				JDBCConn.clearScreen(); // 화면 Clear
+				JDBCConn.clearScreen(in,out); // 화면 Clear
 				int[] success = new int[2]; // 정답 카운트용 배열 변수 선언
 				int[] fail = new int[2]; // 오답 카운트용 배열 변수 선언
 				reList1 = new ArrayList<>();
@@ -117,7 +117,7 @@ public class MockTest {
 						out.writeUTF(mvo.getAnswerInfo() + "\n");
 						out.writeUTF(">>Enter키를 눌러주시면 다음 문제로 넘어갑니다.");
 						in.readUTF();
-						JDBCConn.clearScreen(); // Enter키 입력시 80칸공백 method 호출
+						JDBCConn.clearScreen(in,out); // Enter키 입력시 80칸공백 method 호출
 
 					} // for문 End
 					if (i == 2) {
@@ -196,7 +196,7 @@ public class MockTest {
 
 					} // if문 end
 
-					JDBCConn.clearScreen(); // Enter키 입력시 80칸공백 method 호출
+					JDBCConn.clearScreen(in,out); // Enter키 입력시 80칸공백 method 호출
 
 				} // SELECT for문 End
 			} catch (SQLException e) {
@@ -236,7 +236,7 @@ public class MockTest {
 			out.writeUTF(mvo.getAnswerInfo() + "\n");
 			out.writeUTF(">>Enter키를 눌러주시면 다음 문제로 넘어갑니다.");
 			in.readUTF();
-			JDBCConn.clearScreen(); // Enter키 입력시 80칸공백 method 호출
+			JDBCConn.clearScreen(in,out); // Enter키 입력시 80칸공백 method 호출
 		}
 
 		out.writeUTF(" - [오답문제 결과]  ");
@@ -292,44 +292,5 @@ public class MockTest {
 		return dbSearch;
 
 	}// dbSearch method End
-	
-	
-	
-//	public static String answerCheck (DataInputStream in, DataOutputStream out, String answer, int startNum, int endNum) throws IOException {
-//		boolean test = true;
-//		boolean test1 = true;
-//		boolean test2 = true;
-//		while (test) { // 문자열 유효성 검사
-//			while (test1) {
-//				if (LogRegex.isiInt(answer)) {
-//					System.out.println("유효성 1");
-//					test1 = false;
-//					test2 = true;
-//				} else {
-//					System.out.println("유효성 1 - 1");
-//					out.writeUTF("[Error] 숫자만 입력 가능합니다  \n  >>> 다시 입력해 주세요 : ");
-//					answer = in.readUTF();
-//				}
-//			}
-//			
-//			while (test2) {
-//				if (Integer.parseInt(answer) <= endNum && Integer.parseInt(answer)>=startNum) {
-//					System.out.println("유효성2");
-//					test = false;
-//					test2 =false;
-//				} else {
-//					System.out.println("유효성 2 - 2");
-//					out.writeUTF("1 - 4 사이의 숫자만 입력 가능합니다. \n  >>> 다시입력하세요.");
-//					answer = in.readUTF();
-//					test2 = false;
-//					test1 = true;
-//				}
-//			}
-//		}
-//		return answer;
-//	}//answer check end
-	
-	
-	
 	
 }

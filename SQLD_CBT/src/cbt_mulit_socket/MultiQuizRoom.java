@@ -23,6 +23,7 @@ public class MultiQuizRoom {
 		Scanner scan = new Scanner(System.in);
 		String input;
 		String key;
+		JDBCConn.clearScreen(in,out);
 		out.writeUTF("=============================================================");
 		out.writeUTF("                    한 문제씩 풀기방에 입장하셨습니다                                  ");
 		out.writeUTF("                                                             ");
