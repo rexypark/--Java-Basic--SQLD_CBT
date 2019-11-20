@@ -11,6 +11,7 @@ import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Iterator;
 
+import dao.AdminDAO;
 import dao.JDBCConn;
 import dao.ServerDAO;
 import dao.UserDAO;
@@ -127,6 +128,10 @@ public class CBTServer {
 						// 로그인되면 퀴즈 실행
 						if (ServerDAO.login(in, out) == 1) {
 							id = ServerDAO.user_id;
+							if (ServerDAO.user_id.equals("administrator")) {
+								AdminDAO.adminMain(in, out);
+								break;
+							}
 							clients.put(id, out);
 							choiceRoom(in, out, id);
 						}
