@@ -149,6 +149,7 @@ public class TCPServerMultiChat {
 							out.writeUTF("============================================================================");
 							out.writeUTF("  1. 한 문제씩 풀기(여러명)  |   2. 모의고사 보기(개인)   |  3. 로그아웃(초기 메인화면 복귀) ");
 							out.writeUTF("============================================================================");
+							out.writeUTF(">>");
 							choice = in.readUTF();
 							if (choice.equals("1")) {
 								// 전체에게 접속한 사람 알림
@@ -159,7 +160,7 @@ public class TCPServerMultiChat {
 								//exit를 눌러야 break; 방을 빠져 나올 수 있다.
 								ServerQuiz.quizStart(in,out,id);
 							} else if (choice.equals("2")) {
-								MockTestDAO.mockTestAll();
+								ServerMockTest.mockTestAll(in,out,id);
 							} else {
 								break;
 							}
@@ -172,10 +173,8 @@ public class TCPServerMultiChat {
 			} finally {
 				//
 				try {
-
 					if (socket != null) {
 						socket.close();
-
 						System.out.printf("[%s Exit] \n", id);
 						// client에서 해당 name key & value 삭제
 						clients.remove(id);

@@ -10,6 +10,16 @@ public class LogRegex {
 		isPW(pw);		
 	}
 	
+	//¹®ÀÚ¿­ÀÌ Á¤¼öÀÎÁö ¾Æ´ÑÁö
+	public static boolean isiInt(String s) {
+		try {
+			int i = Integer.parseInt(s);
+			return true;
+		} catch (NumberFormatException e) {
+			return false;
+		}
+	}
+		
 	//ÇÑ±Û ¾Æ´Ñ Á¤±Ô½Ä
 	public static int isKor(String txt) {
 		if(txt.matches(".*[¤¡-¤¾¤¿-¤Ó°¡-ÆR]{1,5}$")) {
