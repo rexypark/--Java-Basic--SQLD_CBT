@@ -68,7 +68,7 @@ public class TCPServerMultiChat {
 		DataInputStream in; // 메세지를 읽을 때 사용
 		DataOutputStream out;;// 필드 clients에 등록 시 사용
 		String ip;
-		static String id;
+		String id;
 		String user_pw;
 		String user_email;
 		String user_name;

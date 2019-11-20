@@ -190,7 +190,7 @@ public class MockTestDAO {
 	
 		}//main while End
 		
-	}//mockTestAll End
+	}//mockTestAll method End
 	
 	public static List<ExamVO> reExam(List<ExamVO> List) {
 		String answer;
@@ -231,7 +231,7 @@ public class MockTestDAO {
 		 
 		 return reList;
 		
-	}// reExam End
+	}// reExam method End
 	
 	
 	public static List<ExamVO> dbSearch(int index, int exam) {

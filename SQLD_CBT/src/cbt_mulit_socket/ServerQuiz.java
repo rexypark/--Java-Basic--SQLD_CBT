@@ -34,9 +34,13 @@ public class ServerQuiz {
 			// 1
 			try {
 				key = in.readUTF();
-				if (key.equals("exit"))
+				if (key.equals("exit")) {
+					TCPServerMultiChat.clients.remove(id);
+					String outMsg = "<" + id + ">´ÔÀÌ ³ª°¬½À´Ï´Ù.";
+					TCPServerMultiChat.ServerReceiver.sendToAll(outMsg);
+					
 					break;
-				
+				}
 				if (key.equals("1") || key.equals("2")) {
 //					TCPServerMultiChat.ServerReceiver.sendToAll(TCPServerMultiChat.ServerReceiver.id+ " >> " + key);
 					TCPServerMultiChat.ServerReceiver.sendToAll(id+ " >> " + key);
