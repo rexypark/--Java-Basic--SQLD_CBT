@@ -7,15 +7,15 @@ import java.io.IOException;
 import java.net.InetAddress;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Iterator;
 
-import dao.DbConn;
-import dao.MockTestDAO;
+import dao.JDBCConn;
+import dao.ServerDAO;
 import dao.UserDAO;
 import dao.UserLogDAO;
 import exam.Quiz;
-import log_in.LogInSignIn;
 import log_in.LogRegex;
 import vo.UserVO;
 
@@ -125,18 +125,21 @@ public class CBTServer {
 					if (choice.equals("1")) {
 						// 로그인
 						// 로그인되면 퀴즈 실행
-						if (ServerVO.login(in, out) == 1) {
-							id = ServerVO.user_id;
+						if (ServerDAO.login(in, out) == 1) {
+							id = ServerDAO.user_id;
 							clients.put(id, out);
 							choiceRoom(in, out, id);
 						}
 					} else if (choice.equals("2")) {
 						// 회원가입
 						// 회원가입 완료되면 메인
-						ServerVO.signIn(in, out);
+						ServerDAO.signIn(in, out);
 					}
 				}
-			} catch (IOException e) {
+				System.out.println("[" + socket.getInetAddress() + ":" + socket.getPort() + "] 종료");
+			} catch(SocketException sc) {
+				System.out.println("종료");
+			}  catch (IOException e) {
 				e.printStackTrace();
 
 			} finally {
@@ -195,11 +198,9 @@ public class CBTServer {
 
 				while (test2) {
 					if (Integer.parseInt(answer) <= endNum && Integer.parseInt(answer) >= startNum) {
-						System.out.println("유효성2");
 						test = false;
 						test2 = false;
 					} else {
-						System.out.println("유효성 2 - 2");
 						out.writeUTF("1 - 4 사이의 숫자만 입력 가능합니다. \n  >>> 다시입력하세요.");
 						answer = in.readUTF();
 						test2 = false;
@@ -213,7 +214,7 @@ public class CBTServer {
 		public static void choiceRoom(DataInputStream in, DataOutputStream out, String id) throws IOException {
 			while (true) {
 				String choice;
-				DbConn.clearScreen();
+				JDBCConn.clearScreen();
 				out.writeUTF("============================================================================");
 				out.writeUTF("  1. 한 문제씩 풀기(여러명)  |   2. 모의고사 보기(개인)   |  3. 로그아웃(초기 메인화면 복귀) ");
 				out.writeUTF("============================================================================");
@@ -227,9 +228,9 @@ public class CBTServer {
 					// ServerQuiz에 quizStart메소드에 dis in, dos out을 입력
 					// quiz방에 접속하고 모든 사람과 채팅 가능
 					// exit를 눌러야 break; 방을 빠져 나올 수 있다.
-					ServerQuiz.quizStart(in, out, id);
+					MultiQuizRoom.quizStart(in, out, id);
 				} else if (choice.equals("2")) {
-					ServerMockTest.mockTestAll(in, out, id);
+					MockTest.mockTestAll(in, out, id);
 				} else {
 					UserDAO.checkLogOutId(id);
 					break;

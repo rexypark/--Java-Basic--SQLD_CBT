@@ -1,16 +1,13 @@
-package cbt_mulit_socket;
+package dao;
 
 import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
-import dao.DbConn;
-import dao.UserDAO;
-import dao.UserLogDAO;
 import log_in.LogRegex;
 import vo.UserVO;
 
-public class ServerVO {
+public class ServerDAO {
 	public static String user_id;
 	public static String user_pw;
 	public static String user_email;
@@ -54,7 +51,7 @@ public class ServerVO {
 					break;
 				}
 
-				DbConn.clearScreen();
+				JDBCConn.clearScreen();
 				out.writeUTF("         |================================|");
 				out.writeUTF("         |    [SQLD CBT Program Login]    |         ");
 				out.writeUTF("         |                                |         ");
@@ -66,7 +63,7 @@ public class ServerVO {
 					exit = 1;
 					break;
 				}
-				DbConn.clearScreen();
+				JDBCConn.clearScreen();
 				out.writeUTF("         |================================|");
 				out.writeUTF("         |    [SQLD CBT Program Login]    |         ");
 				out.writeUTF("         |                                |         ");
@@ -79,7 +76,7 @@ public class ServerVO {
 					out.writeUTF("         |================================|");
 					UserVO logUser = userDao.userInfo;
 					try {
-						Thread.sleep(2000); // 로그인 Success창 2초 딜레이 준 뒤 다음 스텝으로 넘어간다.)
+						Thread.sleep(1500); // 로그인 Success창 2초 딜레이 준 뒤 다음 스텝으로 넘어간다.)
 					} catch (InterruptedException e) {
 						e.printStackTrace();
 					}

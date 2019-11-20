@@ -18,14 +18,14 @@ public class AdminDAO {
 	//1.현재 접속자 정보
 	public void nowUserList() {
 
-		if (DbConn.result == 0) {
-			DbConn.driverLoad();
+		if (JDBCConn.result == 0) {
+			JDBCConn.driverLoad();
 		}
 		
 		List<UserVO> list = new ArrayList<>();
 		//DB연결 - Connection 객체 생성(DB와 연결된)
 		try {
-			DbConn.conn = DriverManager.getConnection(DbConn.URL, DbConn.USER, DbConn.PASSWORD);
+			JDBCConn.conn = DriverManager.getConnection(JDBCConn.URL, JDBCConn.USER, JDBCConn.PASSWORD);
 			
 			//PreparedStatement 객체 생성하고 SQL문 실행
 			StringBuilder sql = new StringBuilder();
@@ -34,17 +34,17 @@ public class AdminDAO {
 			sql.append("WHERE USER_ACT = '로그인' ");
 			sql.append("ORDER BY L_USER_ID");
 		
-			DbConn.pstmt = DbConn.conn.prepareStatement(sql.toString());
+			JDBCConn.pstmt = JDBCConn.conn.prepareStatement(sql.toString());
 			
-			DbConn.rs = DbConn.pstmt.executeQuery();
+			JDBCConn.rs = JDBCConn.pstmt.executeQuery();
 				
 			//SQL문 실행 결과에 대한 처리
-			while (DbConn.rs.next()) {
+			while (JDBCConn.rs.next()) {
 				list.add(new UserVO(
-									DbConn.rs.getString("L_USER_ID"), 
-									DbConn.rs.getString("L_USER_NAME"),
-									DbConn.rs.getString("USER_ACT"),
-									DbConn.rs.getString("USER_TIME")));
+									JDBCConn.rs.getString("L_USER_ID"), 
+									JDBCConn.rs.getString("L_USER_NAME"),
+									JDBCConn.rs.getString("USER_ACT"),
+									JDBCConn.rs.getString("USER_TIME")));
 			}
 			
 			System.out.println("list data check : " + list.size());
@@ -60,7 +60,7 @@ public class AdminDAO {
 			e.printStackTrace();
 		} finally {
 			//사용객체 close
-			JDBC_Close.closeConnStmtRs(DbConn.conn, DbConn.pstmt, DbConn.rs);
+			JDBCConn.closeConnStmtRs(JDBCConn.conn, JDBCConn.pstmt, JDBCConn.rs);
 		}
 		
 	}// nowUserList End
@@ -80,15 +80,15 @@ public class AdminDAO {
 	//3.장기 미접속자
 	public List<UserVO> selectAll() {
 		
-		if (DbConn.result == 0) {
-			DbConn.driverLoad();
+		if (JDBCConn.result == 0) {
+			JDBCConn.driverLoad();
 		}
 		
 		List<UserVO> list = new ArrayList<>();
 		
 		//DB연결 - Connection 객체 생성(DB와 연결된)
 		try {
-			DbConn.conn = DriverManager.getConnection(DbConn.URL, DbConn.USER, DbConn.PASSWORD);
+			JDBCConn.conn = DriverManager.getConnection(JDBCConn.URL, JDBCConn.USER, JDBCConn.PASSWORD);
 			
 			//PreparedStatement 객체 생성하고 SQL문 실행
 			StringBuilder sql = new StringBuilder();
@@ -96,19 +96,19 @@ public class AdminDAO {
 			sql.append("FROM USER_INFO ");
 			sql.append("ORDER BY USER_SEQNUM");
 		
-			DbConn.pstmt = DbConn.conn.prepareStatement(sql.toString());
+			JDBCConn.pstmt = JDBCConn.conn.prepareStatement(sql.toString());
 			
-			DbConn.rs = DbConn.pstmt.executeQuery();
+			JDBCConn.rs = JDBCConn.pstmt.executeQuery();
 				
 			//SQL문 실행 결과에 대한 처리
-			while (DbConn.rs.next()) {
+			while (JDBCConn.rs.next()) {
 				list.add(new UserVO(						  
-									DbConn.rs.getString("USER_ID"),
-									DbConn.rs.getString("USER_NAME"),
-									DbConn.rs.getString("USER_PW"),
-									DbConn.rs.getString("USER_PHONE"),
-									DbConn.rs.getString("USER_EMAIL"),
-									DbConn.rs.getString("USER_SEQNUM")));
+									JDBCConn.rs.getString("USER_ID"),
+									JDBCConn.rs.getString("USER_NAME"),
+									JDBCConn.rs.getString("USER_PW"),
+									JDBCConn.rs.getString("USER_PHONE"),
+									JDBCConn.rs.getString("USER_EMAIL"),
+									JDBCConn.rs.getString("USER_SEQNUM")));
 			}
 			System.out.println("list data check : " + list.size());
 			
@@ -117,7 +117,7 @@ public class AdminDAO {
 			e.printStackTrace();
 		} finally {
 			//사용객체 close
-			JDBC_Close.closeConnStmtRs(DbConn.conn, DbConn.pstmt, DbConn.rs);
+			JDBCConn.closeConnStmtRs(JDBCConn.conn, JDBCConn.pstmt, JDBCConn.rs);
 		}
 
 		return list;

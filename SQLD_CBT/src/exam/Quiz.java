@@ -10,8 +10,7 @@ import java.util.List;
 import java.util.Scanner;
 
 import vo.ExamVO;
-import dao.DbConn;
-import dao.JDBC_Close;
+import dao.JDBCConn;
 
 public class Quiz {
 	
@@ -69,13 +68,13 @@ public class Quiz {
 	
 	public static ExamVO selectQues(int section) {
 		
-		if (DbConn.result == 0) {
-			DbConn.driverLoad();
+		if (JDBCConn.result == 0) {
+			JDBCConn.driverLoad();
 		}
 		
 		ExamVO examVO = null;
 		try {
-			DbConn.conn = DriverManager.getConnection(DbConn.URL, DbConn.USER, DbConn.PASSWORD);
+			JDBCConn.conn = DriverManager.getConnection(JDBCConn.URL, JDBCConn.USER, JDBCConn.PASSWORD);
 			
 			StringBuilder sql = new StringBuilder();
 			sql.append("SELECT *");
@@ -84,23 +83,23 @@ public class Quiz {
 			sql.append("  ORDER BY DBMS_RANDOM.VALUE)" + 
 					"WHERE ROWNUM = 1");//¡∂¿Œ
 			
-			DbConn.pstmt = DbConn.conn.prepareStatement(sql.toString());
+			JDBCConn.pstmt = JDBCConn.conn.prepareStatement(sql.toString());
 			
-			DbConn.pstmt.setInt(1, section);
+			JDBCConn.pstmt.setInt(1, section);
 			
-			DbConn.rs = DbConn.pstmt.executeQuery();
+			JDBCConn.rs = JDBCConn.pstmt.executeQuery();
 			
-			if (DbConn.rs.next()) {
-				examVO = new ExamVO(DbConn.rs.getString("QUESTION"),
-									DbConn.rs.getString("ANSWER"),
-									DbConn.rs.getString("SECTION"),
-									DbConn.rs.getString("EXAM_SEQNUM"), 
-									DbConn.rs.getString("ANSWER_INFO"));
+			if (JDBCConn.rs.next()) {
+				examVO = new ExamVO(JDBCConn.rs.getString("QUESTION"),
+									JDBCConn.rs.getString("ANSWER"),
+									JDBCConn.rs.getString("SECTION"),
+									JDBCConn.rs.getString("EXAM_SEQNUM"), 
+									JDBCConn.rs.getString("ANSWER_INFO"));
 			} 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			JDBC_Close.closeConnStmtRs(DbConn.conn, DbConn.pstmt, DbConn.rs);
+			JDBCConn.closeConnStmtRs(JDBCConn.conn, JDBCConn.pstmt, JDBCConn.rs);
 		}
 		return examVO;
 	}

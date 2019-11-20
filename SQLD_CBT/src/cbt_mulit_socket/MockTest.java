@@ -14,20 +14,19 @@ import java.util.Scanner;
 import java.util.logging.LogRecord;
 
 import cbt_mulit_socket.CBTServer.ServerReceiver;
-import dao.DbConn;
+import dao.JDBCConn;
 import dao.ExamDAO;
-import dao.JDBC_Close;
 import dao.UserDAO;
 import log_in.LogRegex;
 import vo.ExamVO;
 
-public class ServerMockTest {
+public class MockTest {
 
 	static Scanner scan = new Scanner(System.in);
 
 	public static void mockTestAll(DataInputStream in, DataOutputStream out, String id) throws IOException {
 
-		DbConn.clearScreen(); // 화면 Clear
+		JDBCConn.clearScreen(); // 화면 Clear
 		String examValue; // 문제 개수 입력 받는 변수
 		int examCount; // 프로그램 종료를 위한 카운트 변수
 		String answer; // 문제 정답 입력 받는 변수
@@ -66,31 +65,31 @@ public class ServerMockTest {
 					}
 				}
 				examCount = Integer.parseInt(examValue) * 2;
-				DbConn.clearScreen(); // 화면 Clear
+				JDBCConn.clearScreen(); // 화면 Clear
 				int[] success = new int[2]; // 정답 카운트용 배열 변수 선언
 				int[] fail = new int[2]; // 오답 카운트용 배열 변수 선언
 				reList1 = new ArrayList<>();
 				for (int i = 1; i <= 2; i++) { // SELECT FOR문 시작
 					StringBuilder sql = new StringBuilder();
-					if (DbConn.result == 0) {
-						DbConn.driverLoad();
+					if (JDBCConn.result == 0) {
+						JDBCConn.driverLoad();
 					}
-					DbConn.conn = DriverManager.getConnection(DbConn.URL, DbConn.USER, DbConn.PASSWORD);
+					JDBCConn.conn = DriverManager.getConnection(JDBCConn.URL, JDBCConn.USER, JDBCConn.PASSWORD);
 					list = new ArrayList<>();
 					sql.append("SELECT * ");
 					sql.append("FROM EXAM_INFO ");
 					sql.append("WHERE SECTION = " + i);
 					sql.append(" ORDER BY DBMS_RANDOM.VALUE"); // 랜덤으로 데이터를 가져 온다.
 
-					DbConn.pstmt = DbConn.conn.prepareStatement(sql.toString());
-					DbConn.rs = DbConn.pstmt.executeQuery();
+					JDBCConn.pstmt = JDBCConn.conn.prepareStatement(sql.toString());
+					JDBCConn.rs = JDBCConn.pstmt.executeQuery();
 
 					for (int j = 0; j < Integer.parseInt(examValue); j++) {
-						while (DbConn.rs.next()) {
+						while (JDBCConn.rs.next()) {
 
-							list.add(new ExamVO(DbConn.rs.getString("QUESTION"), DbConn.rs.getString("ANSWER"),
-									DbConn.rs.getString("SECTION"), DbConn.rs.getString("EXAM_SEQNUM"),
-									DbConn.rs.getString("ANSWER_INFO")));
+							list.add(new ExamVO(JDBCConn.rs.getString("QUESTION"), JDBCConn.rs.getString("ANSWER"),
+									JDBCConn.rs.getString("SECTION"), JDBCConn.rs.getString("EXAM_SEQNUM"),
+									JDBCConn.rs.getString("ANSWER_INFO")));
 							break;
 						}
 					}
@@ -118,7 +117,7 @@ public class ServerMockTest {
 						out.writeUTF(mvo.getAnswerInfo() + "\n");
 						out.writeUTF(">>Enter키를 눌러주시면 다음 문제로 넘어갑니다.");
 						in.readUTF();
-						DbConn.clearScreen(); // Enter키 입력시 80칸공백 method 호출
+						JDBCConn.clearScreen(); // Enter키 입력시 80칸공백 method 호출
 
 					} // for문 End
 					if (i == 2) {
@@ -197,13 +196,13 @@ public class ServerMockTest {
 
 					} // if문 end
 
-					DbConn.clearScreen(); // Enter키 입력시 80칸공백 method 호출
+					JDBCConn.clearScreen(); // Enter키 입력시 80칸공백 method 호출
 
 				} // SELECT for문 End
 			} catch (SQLException e) {
 				e.printStackTrace();
 			} finally {
-				JDBC_Close.closeConnStmtRs(DbConn.conn, DbConn.pstmt, DbConn.rs);
+				JDBCConn.closeConnStmtRs(JDBCConn.conn, JDBCConn.pstmt, JDBCConn.rs);
 			} // try End
 
 		} // main while End
@@ -237,7 +236,7 @@ public class ServerMockTest {
 			out.writeUTF(mvo.getAnswerInfo() + "\n");
 			out.writeUTF(">>Enter키를 눌러주시면 다음 문제로 넘어갑니다.");
 			in.readUTF();
-			DbConn.clearScreen(); // Enter키 입력시 80칸공백 method 호출
+			JDBCConn.clearScreen(); // Enter키 입력시 80칸공백 method 호출
 		}
 
 		out.writeUTF(" - [오답문제 결과]  ");
@@ -255,11 +254,11 @@ public class ServerMockTest {
 
 		for (int i = 1; i <= 2; i++) { // SELECT FOR문 시작
 			StringBuilder sql = new StringBuilder();
-			if (DbConn.result == 0) {
-				DbConn.driverLoad();
+			if (JDBCConn.result == 0) {
+				JDBCConn.driverLoad();
 			}
 			try {
-				DbConn.conn = DriverManager.getConnection(DbConn.URL, DbConn.USER, DbConn.PASSWORD);
+				JDBCConn.conn = DriverManager.getConnection(JDBCConn.URL, JDBCConn.USER, JDBCConn.PASSWORD);
 				if (index == 2) { // SCORE_INFO 가져오는 거
 
 					sql.append("SELECT ");
@@ -272,12 +271,12 @@ public class ServerMockTest {
 					sql.append("FROM SCORE_INFO ");
 					sql.append("WHERE ROWNUM = 1 ");
 
-					DbConn.pstmt = DbConn.conn.prepareStatement(sql.toString());
-					DbConn.rs = DbConn.pstmt.executeQuery();
+					JDBCConn.pstmt = JDBCConn.conn.prepareStatement(sql.toString());
+					JDBCConn.rs = JDBCConn.pstmt.executeQuery();
 
-					while (DbConn.rs.next()) {
-						dbSearch.add(new ExamVO(DbConn.rs.getString("total"), DbConn.rs.getString("o_total"),
-								DbConn.rs.getString("x_total")));
+					while (JDBCConn.rs.next()) {
+						dbSearch.add(new ExamVO(JDBCConn.rs.getString("total"), JDBCConn.rs.getString("o_total"),
+								JDBCConn.rs.getString("x_total")));
 
 					}
 				}
@@ -285,7 +284,7 @@ public class ServerMockTest {
 			} catch (SQLException e) {
 				e.printStackTrace();
 			} finally {
-				JDBC_Close.closeConnStmtRs(DbConn.conn, DbConn.pstmt, DbConn.rs);
+				JDBCConn.closeConnStmtRs(JDBCConn.conn, JDBCConn.pstmt, JDBCConn.rs);
 			}
 
 		} // SELECT for문 End

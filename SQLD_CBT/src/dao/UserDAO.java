@@ -20,14 +20,14 @@ public class UserDAO {
 	
 	public boolean checkIdPassword(String id, String password) {
 		boolean result = false;
-		if (DbConn.result == 0) {
-			DbConn.driverLoad();
+		if (JDBCConn.result == 0) {
+			JDBCConn.driverLoad();
 		}
 		
 		try {
 			//DB 드라이버 연결이 안되었을 시 DB 드라이버 연결
 			
-			DbConn.conn = DriverManager.getConnection(DbConn.URL, DbConn.USER, DbConn.PASSWORD);
+			JDBCConn.conn = DriverManager.getConnection(JDBCConn.URL, JDBCConn.USER, JDBCConn.PASSWORD);
 			
 			
 			//DB에서 ID와 PW가 함께 있으면 로그인 성공
@@ -35,22 +35,22 @@ public class UserDAO {
 			sql.append("SELECT * ");
 			sql.append("FROM USER_INFO ");
 			sql.append("WHERE USER_ID = ? AND USER_PW = ? ");
-			DbConn.pstmt = DbConn.conn.prepareStatement(sql.toString());
+			JDBCConn.pstmt = JDBCConn.conn.prepareStatement(sql.toString());
 			
-			DbConn.pstmt.setString(1, id);
-			DbConn.pstmt.setString(2, password);
+			JDBCConn.pstmt.setString(1, id);
+			JDBCConn.pstmt.setString(2, password);
 			
-			DbConn.rs = DbConn.pstmt.executeQuery();
+			JDBCConn.rs = JDBCConn.pstmt.executeQuery();
 			
 			// rs에 해당 데이터가 들어가면 result > true
 			// userInfo에 위에서 select한 모든 컬럼의 데이터들을 저장
-			if(DbConn.rs.next()) {
+			if(JDBCConn.rs.next()) {
 				result = true;
-				userInfo = new UserVO(DbConn.rs.getString("USER_ID"), 
-						DbConn.rs.getString("USER_NAME"), 
-						DbConn.rs.getString("USER_PW"), 
-						DbConn.rs.getString("USER_PHONE"), 
-						DbConn.rs.getString("USER_EMAIL"),
+				userInfo = new UserVO(JDBCConn.rs.getString("USER_ID"), 
+						JDBCConn.rs.getString("USER_NAME"), 
+						JDBCConn.rs.getString("USER_PW"), 
+						JDBCConn.rs.getString("USER_PHONE"), 
+						JDBCConn.rs.getString("USER_EMAIL"),
 									 "0");
 			}
 			
@@ -59,7 +59,7 @@ public class UserDAO {
 			e.printStackTrace();
 		} finally {
 			//사용한 객체 close
-			JDBC_Close.closeConnStmtRs(DbConn.conn, DbConn.pstmt, DbConn.rs);
+			JDBCConn.closeConnStmtRs(JDBCConn.conn, JDBCConn.pstmt, JDBCConn.rs);
 			
 		}
 		//result true or false반환
@@ -72,12 +72,12 @@ public class UserDAO {
 	public List<UserVO> selectUserAll() {
 		List<UserVO> list = new ArrayList<>();
 	
-		if (DbConn.result == 0) {
-			DbConn.driverLoad();
+		if (JDBCConn.result == 0) {
+			JDBCConn.driverLoad();
 		}
 		//DB연결 - Connection 객체 생성(DB와 연결된)
 		try {
-			DbConn.conn = DriverManager.getConnection(DbConn.URL, DbConn.USER, DbConn.PASSWORD);
+			JDBCConn.conn = DriverManager.getConnection(JDBCConn.URL, JDBCConn.USER, JDBCConn.PASSWORD);
 			
 			//PreparedStatement 객체 생성하고 SQL문 실행
 			StringBuilder sql = new StringBuilder();
@@ -85,17 +85,17 @@ public class UserDAO {
 			sql.append("FROM USER_INFO ");
 			sql.append("ORDER BY USER_SEQNUM");
 		
-			DbConn.pstmt = DbConn.conn.prepareStatement(sql.toString());
+			JDBCConn.pstmt = JDBCConn.conn.prepareStatement(sql.toString());
 			
-			DbConn.rs = DbConn.pstmt.executeQuery();
+			JDBCConn.rs = JDBCConn.pstmt.executeQuery();
 				
 			//SQL문 실행 결과에 대한 처리
-			while (DbConn.rs.next()) {
-				list.add(new UserVO(DbConn.rs.getString("USER_ID"), 
-									DbConn.rs.getString("USER_NAME"), 
-									DbConn.rs.getString("USER_PW"), 
-									DbConn.rs.getString("USER_PHONE"), 
-									DbConn.rs.getString("USER_EMAIL"),
+			while (JDBCConn.rs.next()) {
+				list.add(new UserVO(JDBCConn.rs.getString("USER_ID"), 
+									JDBCConn.rs.getString("USER_NAME"), 
+									JDBCConn.rs.getString("USER_PW"), 
+									JDBCConn.rs.getString("USER_PHONE"), 
+									JDBCConn.rs.getString("USER_EMAIL"),
 											    "0"));
 			}
 			System.out.println("list data check : " + list.size());
@@ -105,7 +105,7 @@ public class UserDAO {
 			e.printStackTrace();
 		} finally {
 			//사용객체 close
-			JDBC_Close.closeConnStmtRs(DbConn.conn, DbConn.pstmt, DbConn.rs);
+			JDBCConn.closeConnStmtRs(JDBCConn.conn, JDBCConn.pstmt, JDBCConn.rs);
 		}
 
 		return list;
@@ -118,12 +118,12 @@ public class UserDAO {
 	public UserVO selectUser(String id) {
 		
 		//DB연결 - Connection 객체 생성(DB와 연결된)
-		if (DbConn.result == 0) {
-			DbConn.driverLoad();
+		if (JDBCConn.result == 0) {
+			JDBCConn.driverLoad();
 		}
 		
 		try {
-			DbConn.conn = DriverManager.getConnection(DbConn.URL, DbConn.USER, DbConn.PASSWORD);
+			JDBCConn.conn = DriverManager.getConnection(JDBCConn.URL, JDBCConn.USER, JDBCConn.PASSWORD);
 			
 			//PreparedStatement 객체 생성하고 SQL문 실행
 			StringBuilder sql = new StringBuilder();
@@ -131,19 +131,19 @@ public class UserDAO {
 			sql.append("FROM USER_INFO ");
 			sql.append("WHERE USER_ID = ?");
 
-			DbConn.pstmt.setString(1, id); 
+			JDBCConn.pstmt.setString(1, id); 
 			
-			DbConn.pstmt = DbConn.conn.prepareStatement(sql.toString());
+			JDBCConn.pstmt = JDBCConn.conn.prepareStatement(sql.toString());
 			
-			DbConn.rs = DbConn.pstmt.executeQuery();
+			JDBCConn.rs = JDBCConn.pstmt.executeQuery();
 			
 			//SQL문 실행 결과에 대한 처리
-			while (DbConn.rs.next()) {
-				userInfo = new UserVO(DbConn.rs.getString("USER_ID"), 
-									  DbConn.rs.getString("USER_NAME"), 
-									  DbConn.rs.getString("USER_PW"), 
-									  DbConn.rs.getString("USER_PHONE"), 
-									  DbConn.rs.getString("USER_EMAIL"),
+			while (JDBCConn.rs.next()) {
+				userInfo = new UserVO(JDBCConn.rs.getString("USER_ID"), 
+									  JDBCConn.rs.getString("USER_NAME"), 
+									  JDBCConn.rs.getString("USER_PW"), 
+									  JDBCConn.rs.getString("USER_PHONE"), 
+									  JDBCConn.rs.getString("USER_EMAIL"),
 											      "0");
 			}
 			
@@ -151,7 +151,7 @@ public class UserDAO {
 			e.printStackTrace();
 		} finally {
 			//사용객체 close
-			JDBC_Close.closeConnStmtRs(DbConn.conn, DbConn.pstmt, DbConn.rs);
+			JDBCConn.closeConnStmtRs(JDBCConn.conn, JDBCConn.pstmt, JDBCConn.rs);
 		}
 		return userInfo;
 	}//selectAll End
@@ -164,24 +164,24 @@ public class UserDAO {
 		boolean result = false;
 		
 		//DB 드라이버 연결
-		if (DbConn.result == 0) {
-			DbConn.driverLoad();
+		if (JDBCConn.result == 0) {
+			JDBCConn.driverLoad();
 		}
 		
 		try {
-			DbConn.conn = DriverManager.getConnection(DbConn.URL, DbConn.USER, DbConn.PASSWORD);
+			JDBCConn.conn = DriverManager.getConnection(JDBCConn.URL, JDBCConn.USER, JDBCConn.PASSWORD);
 			
 			StringBuilder sql = new StringBuilder();
 			sql.append("SELECT * ");
 			sql.append("FROM USER_INFO ");
 			sql.append("WHERE USER_ID = ?");
-			DbConn.pstmt = DbConn.conn.prepareStatement(sql.toString());
+			JDBCConn.pstmt = JDBCConn.conn.prepareStatement(sql.toString());
 			
-			DbConn.pstmt.setString(1, id);
+			JDBCConn.pstmt.setString(1, id);
 			
-			DbConn.rs = DbConn.pstmt.executeQuery();
+			JDBCConn.rs = JDBCConn.pstmt.executeQuery();
 			
-			if(DbConn.rs.next()) {
+			if(JDBCConn.rs.next()) {
 				System.out.println(">> " + id + "사용중인 아이디입니다.");
 				result = true;
 			}
@@ -189,7 +189,7 @@ public class UserDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			JDBC_Close.closeConnStmtRs(DbConn.conn, DbConn.pstmt, DbConn.rs);
+			JDBCConn.closeConnStmtRs(JDBCConn.conn, JDBCConn.pstmt, JDBCConn.rs);
 		}
 		
 		return result;
@@ -198,14 +198,14 @@ public class UserDAO {
 	
 	public static void checkLogOutId(String id) {
 		UserVO logOutUser = null;
-		if (DbConn.result == 0) {
-			DbConn.driverLoad();
+		if (JDBCConn.result == 0) {
+			JDBCConn.driverLoad();
 		}
 		
 		try {
 			//DB 드라이버 연결이 안되었을 시 DB 드라이버 연결
 			
-			DbConn.conn = DriverManager.getConnection(DbConn.URL, DbConn.USER, DbConn.PASSWORD);
+			JDBCConn.conn = DriverManager.getConnection(JDBCConn.URL, JDBCConn.USER, JDBCConn.PASSWORD);
 			
 			
 			//DB에서 ID와 PW가 함께 있으면 로그인 성공
@@ -213,20 +213,20 @@ public class UserDAO {
 			sql.append("SELECT * ");
 			sql.append("FROM USER_INFO ");
 			sql.append("WHERE USER_ID = ?");
-			DbConn.pstmt = DbConn.conn.prepareStatement(sql.toString());
+			JDBCConn.pstmt = JDBCConn.conn.prepareStatement(sql.toString());
 			
-			DbConn.pstmt.setString(1, id);
+			JDBCConn.pstmt.setString(1, id);
 			
-			DbConn.rs = DbConn.pstmt.executeQuery();
+			JDBCConn.rs = JDBCConn.pstmt.executeQuery();
 			
 			// rs에 해당 데이터가 들어가면 result > true
 			// userInfo에 위에서 select한 모든 컬럼의 데이터들을 저장
-			if(DbConn.rs.next()) {
-				logOutUser = new UserVO(DbConn.rs.getString("USER_ID"), 
-						DbConn.rs.getString("USER_NAME"), 
-						DbConn.rs.getString("USER_PW"), 
-						DbConn.rs.getString("USER_PHONE"), 
-						DbConn.rs.getString("USER_EMAIL"),
+			if(JDBCConn.rs.next()) {
+				logOutUser = new UserVO(JDBCConn.rs.getString("USER_ID"), 
+						JDBCConn.rs.getString("USER_NAME"), 
+						JDBCConn.rs.getString("USER_PW"), 
+						JDBCConn.rs.getString("USER_PHONE"), 
+						JDBCConn.rs.getString("USER_EMAIL"),
 									 "0");
 			}
 			UserLogDAO.userLog(logOutUser.getId(), logOutUser.getName(), "종료");
@@ -236,7 +236,7 @@ public class UserDAO {
 			e.printStackTrace();
 		} finally {
 			//사용한 객체 close
-			JDBC_Close.closeConnStmtRs(DbConn.conn, DbConn.pstmt, DbConn.rs);
+			JDBCConn.closeConnStmtRs(JDBCConn.conn, JDBCConn.pstmt, JDBCConn.rs);
 			
 		}
 	}
@@ -252,13 +252,13 @@ public class UserDAO {
 	public static boolean signUp(String id, String name, String pw, String phone, String email) {
 		boolean signUpcmpt = false;
 		//DB 드라이버 연결
-		if (DbConn.result == 0) {
-			DbConn.driverLoad();
+		if (JDBCConn.result == 0) {
+			JDBCConn.driverLoad();
 		}
 
 		int result = 0;
 		try {
-			DbConn.conn = DriverManager.getConnection(DbConn.URL, DbConn.USER, DbConn.PASSWORD);
+			JDBCConn.conn = DriverManager.getConnection(JDBCConn.URL, JDBCConn.USER, JDBCConn.PASSWORD);
 			
 			
 			//SQL문장을 작성해서 Statement에 전달하고 sql문 실행 요청
@@ -266,14 +266,14 @@ public class UserDAO {
 			sql.append("INSERT INTO USER_INFO ");
 			sql.append("VALUES(?,?,?,?,?,(SELECT NVL(MAX(USER_SEQNUM), 0) + 1 FROM USER_INFO)) "); 
 
-			DbConn.pstmt = DbConn.conn.prepareStatement(sql.toString());
+			JDBCConn.pstmt = JDBCConn.conn.prepareStatement(sql.toString());
 			//?(Q바인딩변수)에 저장시키기
-			DbConn.pstmt.setString(1, id);
-			DbConn.pstmt.setString(2, name);
-			DbConn.pstmt.setString(3, pw);
-			DbConn.pstmt.setString(4, phone);
-			DbConn.pstmt.setString(5, email);
-			result = DbConn.pstmt.executeUpdate();
+			JDBCConn.pstmt.setString(1, id);
+			JDBCConn.pstmt.setString(2, name);
+			JDBCConn.pstmt.setString(3, pw);
+			JDBCConn.pstmt.setString(4, phone);
+			JDBCConn.pstmt.setString(5, email);
+			result = JDBCConn.pstmt.executeUpdate();
 			
 			userInfo = new UserVO(id, 
 								  name, 
@@ -294,7 +294,7 @@ public class UserDAO {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		} finally {
-			JDBC_Close.closeConnStmt(DbConn.conn, DbConn.pstmt);
+			JDBCConn.closeConnStmt(JDBCConn.conn, JDBCConn.pstmt);
 		}
 		
 		//inputUserInfo insert실행이 되었으면 true
