@@ -17,6 +17,7 @@ public class UserDAO {
 	//DB에서 ID와 PW가 있으면 로그인 성공
 	//성공 시 true 리턴
 	//true이면 userLog id, name, act(접속)
+	
 	public boolean checkIdPassword(String id, String password) {
 		boolean result = false;
 		if (DbConn.result == 0) {
@@ -193,6 +194,55 @@ public class UserDAO {
 		
 		return result;
 	}
+	
+	
+	public static void checkLogOutId(String id) {
+		UserVO logOutUser = null;
+		if (DbConn.result == 0) {
+			DbConn.driverLoad();
+		}
+		
+		try {
+			//DB 드라이버 연결이 안되었을 시 DB 드라이버 연결
+			
+			DbConn.conn = DriverManager.getConnection(DbConn.URL, DbConn.USER, DbConn.PASSWORD);
+			
+			
+			//DB에서 ID와 PW가 함께 있으면 로그인 성공
+			StringBuilder sql = new StringBuilder();
+			sql.append("SELECT * ");
+			sql.append("FROM USER_INFO ");
+			sql.append("WHERE USER_ID = ?");
+			DbConn.pstmt = DbConn.conn.prepareStatement(sql.toString());
+			
+			DbConn.pstmt.setString(1, id);
+			
+			DbConn.rs = DbConn.pstmt.executeQuery();
+			
+			// rs에 해당 데이터가 들어가면 result > true
+			// userInfo에 위에서 select한 모든 컬럼의 데이터들을 저장
+			if(DbConn.rs.next()) {
+				logOutUser = new UserVO(DbConn.rs.getString("USER_ID"), 
+						DbConn.rs.getString("USER_NAME"), 
+						DbConn.rs.getString("USER_PW"), 
+						DbConn.rs.getString("USER_PHONE"), 
+						DbConn.rs.getString("USER_EMAIL"),
+									 "0");
+			}
+			UserLogDAO.userLog(logOutUser.getId(), logOutUser.getName(), "종료");
+			
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			//사용한 객체 close
+			JDBC_Close.closeConnStmtRs(DbConn.conn, DbConn.pstmt, DbConn.rs);
+			
+		}
+	}
+	
+	
+	
 	
 	// **회원가입 정보 입력 메서드
 	// UserVO객체를 받으면 DB에 해당 유저 정보 입력

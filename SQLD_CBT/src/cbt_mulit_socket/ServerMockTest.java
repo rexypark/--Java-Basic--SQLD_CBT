@@ -13,7 +13,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.LogRecord;
 
-import cbt_mulit_socket.TCPServerMultiChat.ServerReceiver;
+import cbt_mulit_socket.CBTServer.ServerReceiver;
 import dao.DbConn;
 import dao.ExamDAO;
 import dao.JDBC_Close;
@@ -101,7 +101,7 @@ public class ServerMockTest {
 						out.writeUTF("정답 입력 : ");
 						answer = in.readUTF();
 						
-						TCPServerMultiChat.ServerReceiver.answerCheck(in, out, answer, 1, 4);
+						CBTServer.ServerReceiver.answerCheck(in, out, answer, 1, 4);
 						
 						out.writeUTF("==============================================================");
 						if (answer.equals(mvo.getAnswer())) {
@@ -221,7 +221,7 @@ public class ServerMockTest {
 			out.writeUTF("정답 입력 : ");
 			answer = in.readUTF();
 			
-			TCPServerMultiChat.ServerReceiver.answerCheck(in, out, answer, 1, 4);
+			CBTServer.ServerReceiver.answerCheck(in, out, answer, 1, 4);
 
 			out.writeUTF("==============================================================");
 			if (answer.equals(mvo.getAnswer())) {

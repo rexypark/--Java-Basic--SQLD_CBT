@@ -17,12 +17,14 @@ public class ServerVO {
 	public static String user_name;
 	public static String choice;
 	public static String user_phone;
-	public static int exit = 0;
+	
 
 	
 	//해당 소켓의 dis와 dos를 받아 뷰를 출력하고
 	//아이디와 비밀번호를 받아 로그인을 처리하는 메소드
-	public static void login(DataInputStream in, DataOutputStream out) {
+	public static int login(DataInputStream in, DataOutputStream out) {
+		int sw = 0;
+		int exit = 0;
 		UserDAO userDao = new UserDAO();
 		while (true) {
 			try {
@@ -32,7 +34,21 @@ public class ServerVO {
 				out.writeUTF("         |         ID : _________         |         ");
 				out.writeUTF("                  ID 입력 : ");
 				user_id = in.readUTF();
-
+				while (true) {
+					if (user_id.equals("exit")) {
+						exit = 1;
+						break;
+					}				
+					if (LogRegex.isId(user_id) == 0 || (user_id.length() == 0)) {
+				
+					out.writeUTF("아이디 형식이 맞지 않습니다.");
+					out.writeUTF("다시 입력해 주세요.");
+					out.writeUTF(" >> ");
+					user_id = in.readUTF();
+					} else {
+						break;
+					}
+				}
 				if (user_id.equals("exit")) {
 					exit = 1;
 					break;
@@ -68,7 +84,8 @@ public class ServerVO {
 						e.printStackTrace();
 					}
 					// 아이디, 이름, 로그인 내용 USER_LOG테이블에 insert
-					UserLogDAO.userLog(logUser.getId(), logUser.getName(), "로그인");
+					UserLogDAO.userLog(logUser.getId(), logUser.getName(), "접속");
+					sw = 1;
 					break;
 				} else {
 					// 실패시 while문 반복
@@ -87,11 +104,13 @@ public class ServerVO {
 				e1.printStackTrace();
 			}
 		}
+		return sw;
 	}
 
 	//해당 소켓의 dis와 dos를 받아 뷰를 출력하고
 	//아이디와 비밀번호를 받아 회원가입을 처리하는 메소드
 	public static void signIn(DataInputStream in, DataOutputStream out) {
+		int exit = 0;
 		while (true) {
 			try {
 				out.writeUTF("===================================");
@@ -101,11 +120,11 @@ public class ServerVO {
 				out.writeUTF("                                   ");
 				out.writeUTF(" - 사용하실 ID 입력 >>");
 				user_id = in.readUTF();
-				if (user_id.equals("exit")) {
-					exit = 1;
-					break;
-				}
 				while (true) {
+					if (user_id.equals("exit")) {
+						exit = 1;
+						break;
+					}
 					if (LogRegex.isId(user_id) == 0 || (user_id.length() == 0)) {
 						out.writeUTF("아이디 형식이 맞지 않습니다.");
 						out.writeUTF("다시 입력해 주세요.");
@@ -116,18 +135,26 @@ public class ServerVO {
 						out.writeUTF("다시 입력해 주세요");
 						out.writeUTF("사용할 ID 입력 >>");
 						user_id = in.readUTF();
+						if (user_id.equals("exit")) {
+							exit = 1;
+							break;
+						}
 					} else {
 						break;
 					}
 				}
-				out.writeUTF("한글만 입력 가능합니다.");
-				out.writeUTF("사용할 이름 입력 >>");
-				user_name = in.readUTF();
-				if (user_name.equals("exit")) {
+				if (user_id.equals("exit")) {
 					exit = 1;
 					break;
 				}
-				while (true) {
+				out.writeUTF("한글만 입력 가능합니다.");
+				out.writeUTF("사용할 이름 입력 >>");
+				user_name = in.readUTF();
+				while (exit != 1) {
+					if (user_name.equals("exit")) {
+						exit = 1;
+						break;
+					}
 					if (LogRegex.isKor(user_name) == 0 || (user_name.length() == 0)) {
 						out.writeUTF("이름 형식이 맞지 않습니다. [한글 입력]");
 						out.writeUTF("다시 입력해 주세요.");
@@ -137,14 +164,19 @@ public class ServerVO {
 						break;
 					}
 				}
-				out.writeUTF("영문(대소문자 구분), 숫자, 특수문자 조합, 9~12자리");
-				out.writeUTF("사용할 비밀번호 입력 >>");
-				user_pw = in.readUTF();
-				if (user_pw.equals("exit")) {
+				if (user_name.equals("exit")) {
 					exit = 1;
 					break;
 				}
-				while (true) {
+				out.writeUTF("영문(대소문자 구분), 숫자, 특수문자 조합, 9~12자리");
+				out.writeUTF("사용할 비밀번호 입력 >>");
+				user_pw = in.readUTF();
+				
+				while (exit != 1) {
+					if (user_pw.equals("exit")) {
+						exit = 1;
+						break;
+					}
 					if (LogRegex.isPW(user_pw) == 0 || (user_pw.length() == 0)) {
 						out.writeUTF("비밀번호 형식이 맞지 않습니다.");
 						out.writeUTF("영문(대소문자 구분), 숫자, 특수문자 조합, 9~12자리");
@@ -155,14 +187,19 @@ public class ServerVO {
 						break;
 					}
 				}
-
-				out.writeUTF("사용할 전화 입력 >>");
-				user_phone = in.readUTF();
-				if (user_phone.equals("exit")) {
+				if (user_pw.equals("exit")) {
 					exit = 1;
 					break;
 				}
-				while (true) {
+				
+				out.writeUTF("사용할 전화 입력 >>");
+				user_phone = in.readUTF();
+				
+				while (exit != 1) {
+					if (user_phone.equals("exit")) {
+						exit = 1;
+						break;
+					}
 					if (LogRegex.isPhone(user_phone) == 0 || (user_phone.length() == 0)) {
 						out.writeUTF("전화번호 형식이 맞지 않습니다.");
 						out.writeUTF("010-1234-1234 / 01012341234 / 010.1234.1234");
@@ -174,13 +211,18 @@ public class ServerVO {
 					}
 				}
 
-				out.writeUTF("사용할 이메일 입력 >>");
-				user_email = in.readUTF();
-				if (user_email.equals("exit")) {
+				if (user_phone.equals("exit")) {
 					exit = 1;
 					break;
 				}
-				while (true) {
+				
+				out.writeUTF("사용할 이메일 입력 >>");
+				user_email = in.readUTF();
+				while (exit != 1) {
+					if (user_email.equals("exit")) {
+						exit = 1;
+						break;
+					}
 					if (LogRegex.isEmail(user_email) == 0 || (user_email.length() == 0)) {
 						out.writeUTF("이메일 형식이 맞지 않습니다.");
 						out.writeUTF("asdf12@asd.com");
@@ -191,7 +233,10 @@ public class ServerVO {
 						break;
 					}
 				}
-
+				if (user_email.equals("exit")) {
+					exit = 1;
+					break;
+				}
 				// signUp에서 insert완료 시 true반환
 				boolean inUserData = UserDAO.signUp(user_id, user_name, user_pw, user_phone, user_email);
 

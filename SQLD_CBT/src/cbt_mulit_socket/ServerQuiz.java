@@ -38,15 +38,15 @@ public class ServerQuiz {
 			try {
 				key = in.readUTF();
 				if (key.equals("exit")) {
-					TCPServerMultiChat.clients.remove(id);
+					CBTServer.clients.remove(id);
 					String outMsg = "<" + id + ">님이 나갔습니다.";
-					TCPServerMultiChat.ServerReceiver.sendToAll(outMsg);
-					
+					CBTServer.ServerReceiver.sendToAll(outMsg);
+					CBTServer.clients.remove(id);
 					break;
 				}
 				if (key.equals("1") || key.equals("2")) {
 //					TCPServerMultiChat.ServerReceiver.sendToAll(TCPServerMultiChat.ServerReceiver.id+ " >> " + key);
-					TCPServerMultiChat.ServerReceiver.sendToAll(id+ " >> " + key);
+					CBTServer.ServerReceiver.sendToAll(id+ " >> " + key);
 				} else {
 				switch (keyword(key)) {
 				case "1":
@@ -59,7 +59,7 @@ public class ServerQuiz {
 					break;
 				}
 //					TCPServerMultiChat.ServerReceiver.sendToAll(TCPServerMultiChat.ServerReceiver.id+ " >> " + key);
-					TCPServerMultiChat.ServerReceiver.sendToAll(id+ " >> " + key);
+					CBTServer.ServerReceiver.sendToAll(id+ " >> " + key);
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -72,16 +72,17 @@ public class ServerQuiz {
 
 		ExamVO vo = selectQues(section);
 		String userAnswer;
-		TCPServerMultiChat.ServerReceiver.sendToAll("===========================");
-		TCPServerMultiChat.ServerReceiver.sendToAll(vo.getQwestion());// 문제
+		CBTServer.ServerReceiver.sendToAll("===========================");
+		CBTServer.ServerReceiver.sendToAll(vo.getQwestion());// 문제
 		try {
 		Thread.sleep(3000);
 		} catch (InterruptedException e) {
 			e.printStackTrace();
 		}
-		TCPServerMultiChat.ServerReceiver.sendToAll(vo.getAnswerInfo() + "\n");
+		CBTServer.ServerReceiver.sendToAll("정답 : " + vo.getAnswer() + "\n");
+		CBTServer.ServerReceiver.sendToAll(vo.getAnswerInfo() + "\n");
 
-		TCPServerMultiChat.ServerReceiver.sendToAll("==============================================================");
+		CBTServer.ServerReceiver.sendToAll("==============================================================");
 	}
 
 	public static ExamVO selectQues(int section) {

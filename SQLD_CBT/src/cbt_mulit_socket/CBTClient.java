@@ -4,9 +4,11 @@ import java.io.DataInput;
 import java.io.DataInputStream;
 import java.io.DataOutput;
 import java.io.DataOutputStream;
+import java.io.EOFException;
 import java.io.IOException;
 import java.net.InetAddress;
 import java.net.Socket;
+import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.Scanner;
 
@@ -14,14 +16,14 @@ import javax.swing.InputMap;
 
 // 메세지 작성 전송 독립적으로 동작하는 쓰레드 생성
 // 메세지 수신 독립적으로 동작하는 쓰레드 생성
-public class TCPClientMultiChat {
+public class CBTClient {
 
 	public static void main(String[] args) {
 
 		Socket socket = null;
 		// "192.168.0.100"
 		try {
-			socket = new Socket("192.168.0.58", 10000);
+			socket = new Socket("192.168.0.69", 10000);
 
 			// 메세지 보내기 쓰래드 생성 실행(쓰레드로 동작)
 			ClientSender clientSender = new ClientSender(socket);
@@ -34,8 +36,6 @@ public class TCPClientMultiChat {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-
-		System.out.println(" === main() 끝 === ");
 	}
 
 	// 메세지 보내기
@@ -99,9 +99,19 @@ public class TCPClientMultiChat {
 				try {
 					String msg = in.readUTF();
 					System.out.println(msg);
+				} catch(SocketException sc) {
+					System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+					System.out.println("|서버가 종료되었습니다.|");
+					System.out.println("ㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡㅡ");
+					break;
+				}
+				catch (EOFException e2) {
+					System.out.println("접속이 종료되었습니다.");
+					break;
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
+				
 			}
 		}
 

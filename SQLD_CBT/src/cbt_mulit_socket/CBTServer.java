@@ -19,16 +19,16 @@ import log_in.LogInSignIn;
 import log_in.LogRegex;
 import vo.UserVO;
 
-public class TCPServerMultiChat {
-	
+public class CBTServer {
+
 	// clientName, clientOutStream;
 	static HashMap<String, DataOutputStream> clients; // 접속자 명단
 
 	public static void main(String[] args) {
-		new TCPServerMultiChat().serverStart();
+		new CBTServer().serverStart();
 	}
 
-	TCPServerMultiChat() {
+	CBTServer() {
 		clients = new HashMap<>();
 	}
 
@@ -51,7 +51,7 @@ public class TCPServerMultiChat {
 				// 접속된 클라이언트에 대한 처리 - 쓰레드 생성
 				ServerReceiver thread = new ServerReceiver(socket);
 				thread.start();
-
+				
 			}
 
 		} catch (IOException e) {
@@ -95,78 +95,47 @@ public class TCPServerMultiChat {
 			// 생성 될 때 clients에 추가, 종료 할 때 clients에서 삭제
 			// 메세지를 받고, 접속된 모든 사람에게 메세지 전달
 			try {
-
 				// 클라이언트로 부터 받은 첫 메세지가 클라이언트 name 설정
 				boolean LogOut = true;
-				//로그인 동작 while문
-				//LogOut이 false면 로그아웃
+				// 로그인 동작 while문
+				// LogOut이 false면 로그아웃
 				while (LogOut) {
-					out.writeUTF("|=======================================================================|\n");
-					out.writeUTF("|                                                                (v1.0) |\n");
-					out.writeUTF("|                                [환영 합니다]                             |\n");
-					out.writeUTF("|                        SQLD 기출문제 CBT 프로그램입니다.                    |\n");
-					out.writeUTF("|                                                                       |\n");
-					out.writeUTF("|                Kdata(한국데이터 진흥원)에서 주관하는 시험인 SQLD는                              |\n");
-					out.writeUTF("|          SQL(Structured Query Language) + D(Developer)의 줄임말로                |\n");
+					out.writeUTF("|=======================================================================|");
+					out.writeUTF("|                                                                (v1.0) |");
+					out.writeUTF("|                                [환영 합니다]                             |");
+					out.writeUTF("|                        SQLD 기출문제 CBT 프로그램입니다.                    |");
+					out.writeUTF("|                                                                       |");
+					out.writeUTF("|                Kdata(한국데이터 진흥원)에서 주관하는 시험인 SQLD는                              |");
+					out.writeUTF("|          SQL(Structured Query Language) + D(Developer)의 줄임말로                |");
 					out.writeUTF(
-							"|                    데이터베이스 SQL 국가공인 자격증 입니다                                           |\n");
-					out.writeUTF("|-----------------------------------------------------------------------|\n");
+							"|                    데이터베이스 SQL 국가공인 자격증 입니다                                           |");
+					out.writeUTF("|-----------------------------------------------------------------------|");
 					out.writeUTF(
-							"|        1. 로그인                 |      2. 회원가입           |      3. 프로그램 종료            |\n");
-					out.writeUTF("|-----------------------------------------------------------------------|\n");
+							"|        1. 로그인                 |      2. 회원가입           |      3. 프로그램 종료            |");
+					out.writeUTF("|-----------------------------------------------------------------------|");
 					out.writeUTF("   => 번호를 입력해 주세요 !!! : ");
 					choice = in.readUTF();
-					System.out.println(choice);
+					choice = answerCheck(in, out, choice, 1, 3);
 
-					// 로그인
-					//3 을 선택하면 LogOut이 false가 되고 while문이 종료 로그아웃된다.
-						if (choice.equals("3")) {
-							System.out.println("로그아웃 되셨습니다.");
-							LogOut = false;
-							break;
+					if (choice.equals("3")) {
+						LogOut = false;
+//						System.out.println("[" + socket.getInetAddress() + ":" + socket.getPort() + "] 종료");
+						break;
+					}
+					if (choice.equals("1")) {
+						// 로그인
+						// 로그인되면 퀴즈 실행
+						if (ServerVO.login(in, out) == 1) {
+							id = ServerVO.user_id;
+							clients.put(id, out);
+							choiceRoom(in, out, id);
 						}
-						//ServerVO 클래스 login메소드에 dis in과 dos out을 입력하여
-						//로그인 유무 판별
-						if (choice.equals("1")) {
-							ServerVO.login(in, out);
-						//회원가입
-						//ServerVO 클래스 login메소드에 dis in과 dos out을 입력하여
-						//회원가입유무 판별
-						} else if (choice.equals("2")) {
-							ServerVO.signIn(in, out);
-							ServerVO.login(in, out);
-						}
-						//String id에 로그인에 입력한
-						//id를 입력한다.
-						id = ServerVO.user_id;
-						System.out.println("id찍어볼꼐요~~" + id);
-						//clients Map에 입력받은 아이디와 dos out을 입력하여
-						//해당 quiz방에 들어온 인원들을 저장한다.
-						clients.put(id, out);
-						
-						while(true) {
-							DbConn.clearScreen();
-							out.writeUTF("============================================================================");
-							out.writeUTF("  1. 한 문제씩 풀기(여러명)  |   2. 모의고사 보기(개인)   |  3. 로그아웃(초기 메인화면 복귀) ");
-							out.writeUTF("============================================================================");
-							out.writeUTF(">>");
-							choice = in.readUTF();
-							if (choice.equals("1")) {
-								// 전체에게 접속한 사람 알림
-								sendToAll("#" + id + "님이 입장하셨습니다.");
-								System.out.println("id찍어볼꼐요~~" + id);
-								//ServerQuiz에 quizStart메소드에 dis in, dos out을 입력
-								//quiz방에 접속하고 모든 사람과 채팅 가능 
-								//exit를 눌러야 break; 방을 빠져 나올 수 있다.
-								ServerQuiz.quizStart(in,out,id);
-							} else if (choice.equals("2")) {
-								ServerMockTest.mockTestAll(in,out,id);
-							} else {
-								break;
-							}
-						}
+					} else if (choice.equals("2")) {
+						// 회원가입
+						// 회원가입 완료되면 메인
+						ServerVO.signIn(in, out);
+					}
 				}
-
 			} catch (IOException e) {
 				e.printStackTrace();
 
@@ -175,7 +144,7 @@ public class TCPServerMultiChat {
 				try {
 					if (socket != null) {
 						socket.close();
-						System.out.printf("[%s Exit] \n", id);
+						System.out.printf("[%s, %s] 종료 \n", id, ip);
 						// client에서 해당 name key & value 삭제
 						clients.remove(id);
 						String outMsg = "<" + id + ">님이 나갔습니다.";
@@ -205,8 +174,9 @@ public class TCPServerMultiChat {
 				}
 			}
 		}
-		
-		public static String answerCheck (DataInputStream in, DataOutputStream out, String answer, int startNum, int endNum) throws IOException {
+
+		public static String answerCheck(DataInputStream in, DataOutputStream out, String answer, int startNum,
+				int endNum) throws IOException {
 			boolean test = true;
 			boolean test1 = true;
 			boolean test2 = true;
@@ -222,12 +192,12 @@ public class TCPServerMultiChat {
 						answer = in.readUTF();
 					}
 				}
-				
+
 				while (test2) {
-					if (Integer.parseInt(answer) <= endNum && Integer.parseInt(answer)>=startNum) {
+					if (Integer.parseInt(answer) <= endNum && Integer.parseInt(answer) >= startNum) {
 						System.out.println("유효성2");
 						test = false;
-						test2 =false;
+						test2 = false;
 					} else {
 						System.out.println("유효성 2 - 2");
 						out.writeUTF("1 - 4 사이의 숫자만 입력 가능합니다. \n  >>> 다시입력하세요.");
@@ -238,10 +208,35 @@ public class TCPServerMultiChat {
 				}
 			}
 			return answer;
-		}//answer check en
-		
-		
-		
+		}
+
+		public static void choiceRoom(DataInputStream in, DataOutputStream out, String id) throws IOException {
+			while (true) {
+				String choice;
+				DbConn.clearScreen();
+				out.writeUTF("============================================================================");
+				out.writeUTF("  1. 한 문제씩 풀기(여러명)  |   2. 모의고사 보기(개인)   |  3. 로그아웃(초기 메인화면 복귀) ");
+				out.writeUTF("============================================================================");
+				out.writeUTF(">>");
+				choice = in.readUTF();
+				choice = answerCheck(in, out, choice, 1, 3);
+				if (choice.equals("1")) {
+					// 전체에게 접속한 사람 알림
+					sendToAll("#" + id + "님이 입장하셨습니다.");
+					System.out.println("id찍어볼꼐요~~" + id);
+					// ServerQuiz에 quizStart메소드에 dis in, dos out을 입력
+					// quiz방에 접속하고 모든 사람과 채팅 가능
+					// exit를 눌러야 break; 방을 빠져 나올 수 있다.
+					ServerQuiz.quizStart(in, out, id);
+				} else if (choice.equals("2")) {
+					ServerMockTest.mockTestAll(in, out, id);
+				} else {
+					UserDAO.checkLogOutId(id);
+					break;
+				}
+			}
+		}
+
 	}
 
 }
