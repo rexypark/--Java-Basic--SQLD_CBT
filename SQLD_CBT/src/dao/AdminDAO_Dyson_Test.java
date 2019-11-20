@@ -32,19 +32,14 @@ public class AdminDAO_Dyson_Test {
 			 dao.userListAll(list);
 			 break;
 		 case "3" :
-		
 			 
 		}
 		
-		
 	}
-	
 	
 	  public static void clearScreen() {
 		    for (int i = 0; i < 80; i++)
 		      System.out.println("");
 		  }
-
-		
 
 }

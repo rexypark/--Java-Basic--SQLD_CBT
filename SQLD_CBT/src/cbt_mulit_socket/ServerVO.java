@@ -94,9 +94,12 @@ public class ServerVO {
 	public static void signIn(DataInputStream in, DataOutputStream out) {
 		while (true) {
 			try {
-				out.writeUTF("회원가입");
-				out.writeUTF("exit 입력 시 log in 창으로 갑니다.");
-				out.writeUTF("사용할 ID 입력 >>");
+				out.writeUTF("===================================");
+				out.writeUTF("               회원가입                            ");
+				out.writeUTF("-----------------------------------");
+				out.writeUTF("   exit 입력시 초기 화면 창으로 돌아갑니다     ");
+				out.writeUTF("                                   ");
+				out.writeUTF(" - 사용하실 ID 입력 >>");
 				user_id = in.readUTF();
 				if (user_id.equals("exit")) {
 					exit = 1;

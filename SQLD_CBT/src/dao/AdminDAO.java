@@ -11,8 +11,6 @@ import java.util.Scanner;
 
 import vo.UserVO;
 
-
-
 public class AdminDAO {
 	
 	Scanner scan = new Scanner(System.in);
@@ -71,9 +69,9 @@ public class AdminDAO {
 	//2.전체 회원정보 list
 	public void userListAll(List<UserVO> list) {
 		 System.out.println("|=====================================================================================================================|");
-		 System.out.println("| Index |       User ID        |       Name      |     Password    |      Phone      |             E-Mail             |");
+		 System.out.println("| Index |       User ID        |       Name      |     Password    |       Phone       |             E-Mail           |");
 		for (UserVO mvo : list) { 
-			System.out.printf("%5s %24s %17s %17s %17s %32s \n", mvo.getSeqnum(), mvo.getId(), mvo.getName()
+			System.out.printf("%5s %20s %15s %30s %20s %28s \n", mvo.getSeqnum(), mvo.getId(), mvo.getName()
 					          , mvo.getPw(), mvo.getPhone(), mvo.getEmail());
 		}
 	}// userListAll End

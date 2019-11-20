@@ -24,10 +24,13 @@ public class ServerQuiz {
 		Scanner scan = new Scanner(System.in);
 		String input;
 		String key;
-		out.writeUTF("Quiz방에 입장하셨습니다.");
-		out.writeUTF("방장 >> 키워드 - sqld1 : 과목 1");
-		out.writeUTF("방장>> 키워드 - sqld2 : 과목 2");
-		out.writeUTF("해당 키워드를 입력 하시면 해당 과목의 문제가 출제됩니다.");
+		out.writeUTF("=============================================================");
+		out.writeUTF("                    한 문제씩 풀기방에 입장하셨습니다                                  ");
+		out.writeUTF("                                                             ");
+		out.writeUTF(" 채팅창에 [sqld1] 커맨드 입력시  [1. 데이터 모델링의 이해] 문제가 출력 됩니다. ");
+		out.writeUTF(" 채팅창에 [sqld2] 커맨드 입력시  [2.   SQL 기본 및 활용] 문제가 출력 됩니다. ");
+		out.writeUTF(" 채팅창에 [ ㅋㅈ  ] 커맨드 입력시  [     주관식 문제         ] 문제가 출력 됩니다. ");
+		out.writeUTF("=============================================================");
 		while (true) {
 			
 //			out.writeUTF(dao.UserDAO.userInfo.getId() + " >>");

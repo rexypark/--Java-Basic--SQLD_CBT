@@ -145,7 +145,10 @@ public class TCPServerMultiChat {
 						clients.put(id, out);
 						
 						while(true) {
-							out.writeUTF("1. quiz   2. selfTest 3. exit");
+							DbConn.clearScreen();
+							out.writeUTF("============================================================================");
+							out.writeUTF("  1. 한 문제씩 풀기(여러명)  |   2. 모의고사 보기(개인)   |  3. 로그아웃(초기 메인화면 복귀) ");
+							out.writeUTF("============================================================================");
 							choice = in.readUTF();
 							if (choice.equals("1")) {
 								// 전체에게 접속한 사람 알림
