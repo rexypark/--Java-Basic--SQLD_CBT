@@ -206,6 +206,39 @@ public class TCPServerMultiChat {
 			}
 		}
 		
+		public static String answerCheck (DataInputStream in, DataOutputStream out, String answer, int startNum, int endNum) throws IOException {
+			boolean test = true;
+			boolean test1 = true;
+			boolean test2 = true;
+			while (test) { // 문자열 유효성 검사
+				while (test1) {
+					if (LogRegex.isiInt(answer)) {
+						System.out.println("유효성 1");
+						test1 = false;
+						test2 = true;
+					} else {
+						System.out.println("유효성 1 - 1");
+						out.writeUTF("[Error] 숫자만 입력 가능합니다  \n  >>> 다시 입력해 주세요 : ");
+						answer = in.readUTF();
+					}
+				}
+				
+				while (test2) {
+					if (Integer.parseInt(answer) <= endNum && Integer.parseInt(answer)>=startNum) {
+						System.out.println("유효성2");
+						test = false;
+						test2 =false;
+					} else {
+						System.out.println("유효성 2 - 2");
+						out.writeUTF("1 - 4 사이의 숫자만 입력 가능합니다. \n  >>> 다시입력하세요.");
+						answer = in.readUTF();
+						test2 = false;
+						test1 = true;
+					}
+				}
+			}
+			return answer;
+		}//answer check en
 		
 		
 		

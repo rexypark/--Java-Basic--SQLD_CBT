@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.logging.LogRecord;
 
+import cbt_mulit_socket.TCPServerMultiChat.ServerReceiver;
 import dao.DbConn;
 import dao.ExamDAO;
 import dao.JDBC_Close;
@@ -93,53 +94,14 @@ public class ServerMockTest {
 							break;
 						}
 					}
-					boolean test = true;
+					
 					for (ExamVO mvo : list) { // examValue만큼 문제를 보여준다.
 						out.writeUTF("==============================================================");
 						out.writeUTF(mvo.getQwestion());// 문제
 						out.writeUTF("정답 입력 : ");
-						out.writeUTF("여기다: ");
 						answer = in.readUTF();
 						
-						while (true) { // 문자열 유효성 검사
-		                     if (answer.length() == 0) {
-		                        out.writeUTF("1 - 4 사이의 숫자만 입력 가능합니다. \n  >>> 다시입력하세요.");
-		                        answer = in.readUTF();
-		                     }
-		                     if (!LogRegex.isiInt(answer)) {
-		                        out.writeUTF("[Error] 숫자만 입력 가능합니다  \n  >>> 다시 입력해 주세요 : ");
-		                        answer = in.readUTF();
-		                     }
-		                     if (Integer.parseInt(answer) <= 4 && Integer.parseInt(answer)>=1) {
-		                        break;
-		                     } else {
-		                           out.writeUTF("1 - 4 사이의 숫자만 입력 가능합니다. \n  >>> 다시입력하세요.");
-		                           answer = in.readUTF();
-		                     }
-		                  }
-//						while (test) { // 문자열 유효성 검사
-//							while (true) {
-//								if (LogRegex.isiInt(answer)) {
-//									break;
-//								} else {
-//									out.writeUTF("[Error] 숫자만 입력 가능합니다  \n  >>> 다시 입력해 주세요 : ");
-//									answer = in.readUTF();
-//									break;
-//								}
-//							}
-//							
-//							while (true) {
-//								if (Integer.parseInt(answer) <= 4 && Integer.parseInt(answer)>=1) {
-//									test = false;
-//									break;
-//								} else {
-//									out.writeUTF("1 - 4 사이의 숫자만 입력 가능합니다. \n  >>> 다시입력하세요.");
-//									answer = in.readUTF();
-//									test = true;
-//									break;
-//								}
-//							}
-//						}
+						TCPServerMultiChat.ServerReceiver.answerCheck(in, out, answer, 1, 4);
 						
 						out.writeUTF("==============================================================");
 						if (answer.equals(mvo.getAnswer())) {
@@ -258,22 +220,9 @@ public class ServerMockTest {
 			out.writeUTF(mvo.getQwestion());// 문제
 			out.writeUTF("정답 입력 : ");
 			answer = in.readUTF();
-			while (true) { // 문자열 유효성 검사
-				if (LogRegex.isiInt(answer)) {
-					break;
-				} else {
-					out.writeUTF("[Error] 숫자만 입력 가능합니다  \n  >>> 다시 입력해 주세요 : ");
-					answer = in.readUTF();
-				}
-			}
-			while (true) {
-				if (Integer.parseInt(answer) <= 4 && Integer.parseInt(answer)>=1 && LogRegex.isiInt(answer) && answer != null) {
-					break;
-				} else {
-						out.writeUTF("1 - 4 사이의 숫자만 입력 가능합니다. \n  >>> 다시입력하세요.");
-						answer = in.readUTF();
-				}
-			}
+			
+			TCPServerMultiChat.ServerReceiver.answerCheck(in, out, answer, 1, 4);
+
 			out.writeUTF("==============================================================");
 			if (answer.equals(mvo.getAnswer())) {
 				out.writeUTF(" /// 정답입니다 !!! ///\n");
@@ -344,4 +293,44 @@ public class ServerMockTest {
 		return dbSearch;
 
 	}// dbSearch method End
+	
+	
+	
+//	public static String answerCheck (DataInputStream in, DataOutputStream out, String answer, int startNum, int endNum) throws IOException {
+//		boolean test = true;
+//		boolean test1 = true;
+//		boolean test2 = true;
+//		while (test) { // 문자열 유효성 검사
+//			while (test1) {
+//				if (LogRegex.isiInt(answer)) {
+//					System.out.println("유효성 1");
+//					test1 = false;
+//					test2 = true;
+//				} else {
+//					System.out.println("유효성 1 - 1");
+//					out.writeUTF("[Error] 숫자만 입력 가능합니다  \n  >>> 다시 입력해 주세요 : ");
+//					answer = in.readUTF();
+//				}
+//			}
+//			
+//			while (test2) {
+//				if (Integer.parseInt(answer) <= endNum && Integer.parseInt(answer)>=startNum) {
+//					System.out.println("유효성2");
+//					test = false;
+//					test2 =false;
+//				} else {
+//					System.out.println("유효성 2 - 2");
+//					out.writeUTF("1 - 4 사이의 숫자만 입력 가능합니다. \n  >>> 다시입력하세요.");
+//					answer = in.readUTF();
+//					test2 = false;
+//					test1 = true;
+//				}
+//			}
+//		}
+//		return answer;
+//	}//answer check end
+	
+	
+	
+	
 }
