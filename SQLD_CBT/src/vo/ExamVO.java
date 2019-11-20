@@ -12,6 +12,13 @@ public class ExamVO {
 		private String oTotal;
 		private String xTotal;
 		
+		//SCORE_INFO遂 持失切
+		public ExamVO(String allTotal, String oTotal, String xTotal) {
+			super();
+			this.allTotal = allTotal;
+			this.oTotal = oTotal;
+			this.xTotal = xTotal;
+		}
 		
 		//EXAM_INFO遂 持失切
 		public ExamVO(String qwestion, String answer, String section, String examSeq, String answerInfo) {
@@ -23,13 +30,6 @@ public class ExamVO {
 			this.answerInfo = answerInfo;
 		}
 		
-		//SCORE_INFO遂 持失切
-		public ExamVO(String allTotal, String oTotal, String xTotal) {
-			super();
-			this.allTotal = allTotal;
-			this.oTotal = oTotal;
-			this.xTotal = xTotal;
-		}
 
 
 

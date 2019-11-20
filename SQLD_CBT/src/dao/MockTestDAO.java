@@ -25,6 +25,7 @@ public class MockTestDAO {
 		List<ExamVO> reList1 = new ArrayList<>();
 		List<ExamVO> reList2 = new ArrayList<>();
 		List<ExamVO> scoreList = new ArrayList<>();
+  
 		
 		boolean mainWhile = true;
 		while(mainWhile) {//main while문
@@ -118,35 +119,37 @@ public class MockTestDAO {
 							 long endTime = System.currentTimeMillis();
 							 int[] allTotal = new int[2]; 
 							 int[] xTotal = new int[2];    
-							 int[] oTotal = new int[2];    
+							 int[] oTotal = new int[2]; 
 							 scoreList = new ArrayList<>();
 							 scoreList = dbSearch(2, 1);
+							 int index = 0;
 							 for (ExamVO mvo : scoreList) {
-								 int index = 0;
+								 System.out.println(mvo.getAllTotal() +"  " +mvo.getxTotal()  +"  " + mvo.getoTotal());
 								 allTotal[index] = Integer.parseInt(mvo.getAllTotal());
 								 xTotal[index] = Integer.parseInt(mvo.getxTotal());
 								 oTotal[index] = Integer.parseInt(mvo.getoTotal());
 								 index++;
 							 }
+							 
 							 double chapter1 = Double.parseDouble(String.format("%.2f",((double) success[0] / (double) examValue) * 100));
 							 double chapter2 = Double.parseDouble(String.format("%.2f",((double) success[1] / (double) examValue) * 100));
 							 double allChapter1 = Double.parseDouble(String.format("%.2f",((double) oTotal[0] / (double) allTotal[0]) * 100));
 							 double allChapter2 = Double.parseDouble(String.format("%.2f",((double) oTotal[1] / (double) allTotal[1]) * 100));
-							 System.out.println("=============================================================");
+							 System.out.println("=============================================================================");
 							 System.out.println(UserDAO.userInfo.getId() + "님의 모의고사 진행결과  ");
 							 System.out.println(" - 총 진행시간 : " + ( endTime - startTime )/1000.0 +"초");
 							 System.out.println(" - [1과목. 데이터 모델링의 이해]  ");
-							 System.out.println("    - 문제수 : " + examValue +         "                " + "   - 총 문제풀이수 : " + allTotal[0] );
+							 System.out.println("    - 문제수 : " + examValue +         "                " + "       - 총 문제풀이수 : " + allTotal[0] );
 							 System.out.println("    - 정답 : " + success[0] + "개   |" + " 오답 : " + fail[0] + "개"+ 
-							                    "           " + "   - 총 정답수 : " + oTotal[0] + "개  |" + " 총 오답수 : " + xTotal[0] + "개" );
-							 System.out.println("    - 정답률 : " + chapter1 + "%"+         "        " + "      - 총 정답률 : " + allChapter1 + "%" );
+							                    "           " + "       - 총 정답수 : " + oTotal[0] + "개  |" + " 총 오답수 : " + xTotal[0] + "개" );
+							 System.out.println("    - 정답률 : " + chapter1 + "%"+         "        " + "          - 총 정답률 : " + allChapter1 + "%" );
 							 System.out.println();
 							 System.out.println(" - [2과목. SQL 기본 및 활용]  ");
-							 System.out.println("    - 문제수 : " + examValue +         "                " + "   - 총 문제풀이수 : " + allTotal[1] );
+							 System.out.println("    - 문제수 : " + examValue +         "                " + "       - 총 문제풀이수 : " + allTotal[1] );
 							 System.out.println("    - 정답 : " + success[1] + "개   |" + " 오답 : " + fail[1] + "개"+ 
-							                    "           " + "   - 총 정답수 : " + oTotal[1] + "개  |" + " 총 오답수 : " + xTotal[1] + "개" );
-							 System.out.println("    - 정답률 : " + chapter2 + "%"+         "        " + "      - 총 정답률 : " + allChapter2 + "%" );
-							 System.out.println("=============================================================");
+							                    "           " + "       - 총 정답수 : " + oTotal[1] + "개  |" + " 총 오답수 : " + xTotal[1] + "개" );
+							 System.out.println("    - 정답률 : " + chapter2 + "%"+         "        " + "          - 총 정답률 : " + allChapter2 + "%" );
+							 System.out.println("=============================================================================");
 							 System.out.println();
 					 
 							 
@@ -254,16 +257,15 @@ public class MockTestDAO {
 					sql.append("FROM SCORE_INFO ");
 					sql.append("WHERE ROWNUM = 1 ");
 					
-					
 					DbConn.pstmt = DbConn.conn.prepareStatement(sql.toString());
 					DbConn.rs = DbConn.pstmt.executeQuery();
-					System.out.println(i + " rs 성공");
+					
 					while (DbConn.rs.next()) {
 						dbSearch.add(new ExamVO(DbConn.rs.getString("total"),
 												DbConn.rs.getString("o_total"),
 												DbConn.rs.getString("x_total")));
+						
 					}
-					System.out.println(i + " dbSearch.add 성공");
 				}
 				
 			} catch (SQLException e) {
@@ -271,10 +273,11 @@ public class MockTestDAO {
 			} finally {
 				JDBC_Close.closeConnStmtRs(DbConn.conn, DbConn.pstmt, DbConn.rs);
 			}
-						
 			
 		}//SELECT for문 End
 		
+		System.out.println(dbSearch.get(0));
+		System.out.println(dbSearch.get(1));
 		return dbSearch;
 	
 	}//dbSearch method End
