@@ -96,7 +96,7 @@ public class ServerDAO {
 					}
 					// DbConn.clearScreen(); // 창 클리어
 				}
-			} catch (IOException e1) {
+			}catch (IOException e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
@@ -110,12 +110,18 @@ public class ServerDAO {
 		int exit = 0;
 		while (true) {
 			try {
-				out.writeUTF("===================================");
-				out.writeUTF("               회원가입                            ");
-				out.writeUTF("-----------------------------------");
-				out.writeUTF("   exit 입력시 초기 화면 창으로 돌아갑니다     ");
-				out.writeUTF("                                   ");
-				out.writeUTF(" - 사용하실 ID 입력 >>");
+				JDBCConn.clearScreen(in,out);
+				out.writeUTF("                   |================================|         ");
+				out.writeUTF("                   |                   [나가기 : exit]|         ");
+				out.writeUTF("                   |                                |         ");
+				out.writeUTF("                   |   [SQLD CBT Program 회원가입]    |         ");
+				out.writeUTF("                   |                                |         ");
+				out.writeUTF("                   |================================|         ");
+				out.writeUTF("\n");
+				out.writeUTF("                           [5 ~ 15자 영문/숫자만 가능]                 ");
+				out.writeUTF("                             ID: _________                   ");
+				out.writeUTF("                             ID 입력 : ");
+				
 				user_id = in.readUTF();
 				while (true) {
 					if (user_id.equals("exit")) {
@@ -144,8 +150,18 @@ public class ServerDAO {
 					exit = 1;
 					break;
 				}
-				out.writeUTF("한글만 입력 가능합니다.");
-				out.writeUTF("사용할 이름 입력 >>");
+				JDBCConn.clearScreen(in,out);
+				out.writeUTF("                   |================================|         ");
+				out.writeUTF("                   |                   [나가기 : exit]|         ");
+				out.writeUTF("                   |                                |         ");
+				out.writeUTF("                   |   [SQLD CBT Program 회원가입]    |         ");
+				out.writeUTF("                   |                                |         ");
+				out.writeUTF("                   |================================|         ");
+				out.writeUTF("                             ID : " + user_id);
+				out.writeUTF("\n");
+				out.writeUTF("                             [한글 3글자만가능]                 ");
+				out.writeUTF("			         이름: _________                   ");
+				out.writeUTF("			         이름입력 : ");
 				user_name = in.readUTF();
 				while (exit != 1) {
 					if (user_name.equals("exit")) {
@@ -153,7 +169,7 @@ public class ServerDAO {
 						break;
 					}
 					if (LogRegex.isKor(user_name) == 0 || (user_name.length() == 0)) {
-						out.writeUTF("이름 형식이 맞지 않습니다. [한글 입력]");
+						out.writeUTF("이름 형식이 맞지 않습니다. [한글 3글자입력]");
 						out.writeUTF("다시 입력해 주세요.");
 						out.writeUTF("사용할 이름 입력 >>");
 						user_name = in.readUTF();
@@ -165,10 +181,22 @@ public class ServerDAO {
 					exit = 1;
 					break;
 				}
-				out.writeUTF("영문(대소문자 구분), 숫자, 특수문자 조합, 9~12자리");
-				out.writeUTF("사용할 비밀번호 입력 >>");
-				user_pw = in.readUTF();
+				JDBCConn.clearScreen(in,out);
+				out.writeUTF("                   |================================|         ");
+				out.writeUTF("                   |                   [나가기 : exit]|         ");
+				out.writeUTF("                   |                                |         ");
+				out.writeUTF("                   |   [SQLD CBT Program 회원가입]    |         ");
+				out.writeUTF("                   |                                |         ");
+				out.writeUTF("                   |================================|         ");
+				out.writeUTF("                             ID : " + user_id);
+				out.writeUTF("			         이름: " + user_name);
+				out.writeUTF("\n");
+				out.writeUTF("                             [영문 대/소문자 포함]");
+				out.writeUTF("                        [숫자, 특수문자 조합, 9~12자리]                 ");
+				out.writeUTF("                             PW : _________                   ");
+				out.writeUTF("                             PW 입력 : ");
 				
+				user_pw = in.readUTF();
 				while (exit != 1) {
 					if (user_pw.equals("exit")) {
 						exit = 1;
@@ -189,9 +217,23 @@ public class ServerDAO {
 					break;
 				}
 				
-				out.writeUTF("사용할 전화 입력 >>");
-				user_phone = in.readUTF();
 				
+				JDBCConn.clearScreen(in,out);
+				out.writeUTF("                   |================================|         ");
+				out.writeUTF("                   |                   [나가기 : exit]|         ");
+				out.writeUTF("                   |                                |         ");
+				out.writeUTF("                   |   [SQLD CBT Program 회원가입]    |         ");
+				out.writeUTF("                   |                                |         ");
+				out.writeUTF("                   |================================|         ");
+				out.writeUTF("                             ID : " + user_id);
+				out.writeUTF("			         이름: " + user_name);
+				out.writeUTF("                             PW : " + user_pw);
+				out.writeUTF("\n");
+				out.writeUTF("                             [전화번호 구분자 -/.]");
+				out.writeUTF("               [010-1234-1234 / 01012341234 / 010.1234.1234]                 ");
+				out.writeUTF("                             Phone : _________                   ");
+				out.writeUTF("                             Phone 입력 : ");
+				user_phone = in.readUTF();
 				while (exit != 1) {
 					if (user_phone.equals("exit")) {
 						exit = 1;
@@ -207,12 +249,28 @@ public class ServerDAO {
 						break;
 					}
 				}
-
 				if (user_phone.equals("exit")) {
 					exit = 1;
 					break;
 				}
 				
+				JDBCConn.clearScreen(in,out);
+				out.writeUTF("                   |================================|         ");
+				out.writeUTF("                   |                   [나가기 : exit]|         ");
+				out.writeUTF("                   |                                |         ");
+				out.writeUTF("                   |   [SQLD CBT Program 회원가입]    |         ");
+				out.writeUTF("                   |                                |         ");
+				out.writeUTF("                   |================================|         ");
+				out.writeUTF("                             ID : " + user_id);
+				out.writeUTF("			         이름: " + user_name);
+				out.writeUTF("                             PW : " + user_pw);
+				out.writeUTF("			         전화: " + user_phone);
+				out.writeUTF("\n");
+				out.writeUTF("                             [asdf12@asd.com]");
+				out.writeUTF("                             [이메일 주소까지 입력]                 ");
+				out.writeUTF("                             email : _________                   ");
+				out.writeUTF("                             email 입력 : ");
+
 				out.writeUTF("사용할 이메일 입력 >>");
 				user_email = in.readUTF();
 				while (exit != 1) {

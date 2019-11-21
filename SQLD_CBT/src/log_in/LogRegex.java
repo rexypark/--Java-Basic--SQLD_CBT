@@ -24,9 +24,7 @@ public class LogRegex {
 	public static int isKor(String txt) {
 		if(txt.matches(".*[¤¡-¤¾¤¿-¤Ó°¡-ÆR]{1,5}$")) {
 			return 1;
-		// ÇÑ±ÛÀÌ Æ÷ÇÔµÈ ¹®ÀÚ¿­
 		} else {
-		// ÇÑ±ÛÀÌ Æ÷ÇÔµÇÁö ¾ÊÀº ¹®ÀÚ¿­
 			return 0;
 		}
 	}

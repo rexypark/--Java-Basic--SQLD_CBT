@@ -20,6 +20,7 @@ public class MultiQuizRoom {
 	private static Scanner scan = new Scanner(System.in);
 
 	public static void quizStart(DataInputStream in, DataOutputStream out, String id) throws IOException {
+		CBTServer.clients.put(id, out);
 		Scanner scan = new Scanner(System.in);
 		String input;
 		String key;
@@ -30,15 +31,14 @@ public class MultiQuizRoom {
 		out.writeUTF(" 채팅창에 [sqld1] 커맨드 입력시  [1. 데이터 모델링의 이해] 문제가 출력 됩니다. ");
 		out.writeUTF(" 채팅창에 [sqld2] 커맨드 입력시  [2.   SQL 기본 및 활용] 문제가 출력 됩니다. ");
 		out.writeUTF(" 채팅창에 [ ㅋㅈ  ] 커맨드 입력시  [     주관식 문제         ] 문제가 출력 됩니다. ");
+		out.writeUTF(" 채팅창에 [ ㄹㄷ  ] 커맨드 입력시  [     랜  덤  문제         ] 문제가 출력 됩니다. ");
 		out.writeUTF("=============================================================");
 		while (true) {
-			
 //			out.writeUTF(dao.UserDAO.userInfo.getId() + " >>");
 			// 1
 			try {
 				key = in.readUTF();
 				if (key.equals("exit")) {
-					CBTServer.clients.remove(id);
 					String outMsg = "<" + id + ">님이 나갔습니다.";
 					CBTServer.ServerReceiver.sendToAll(outMsg);
 					CBTServer.clients.remove(id);
@@ -55,11 +55,17 @@ public class MultiQuizRoom {
 				case "2":
 					quesPrint(2, in, out);
 					break;
+				case "ㄹㄷ":
+					quesPrint(in, out);
+					break;
+				case "ㅋㅈ":
+					quesPrint(3, in, out);
+					break;
 				default:
 					break;
 				}
 //					TCPServerMultiChat.ServerReceiver.sendToAll(TCPServerMultiChat.ServerReceiver.id+ " >> " + key);
-					CBTServer.ServerReceiver.sendToAll(id+ " >> " + key);
+					CBTServer.ServerReceiver.sendToAll(id + " >> " + key + "\n");
 				}
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
@@ -72,7 +78,24 @@ public class MultiQuizRoom {
 
 		ExamVO vo = selectQues(section);
 		String userAnswer;
-		CBTServer.ServerReceiver.sendToAll("===========================");
+		out.writeUTF("=============================================================");
+		CBTServer.ServerReceiver.sendToAll(vo.getQwestion());// 문제
+		try {
+		Thread.sleep(3000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		CBTServer.ServerReceiver.sendToAll("정답 : " + vo.getAnswer() + "\n");
+		CBTServer.ServerReceiver.sendToAll(vo.getAnswerInfo() + "\n");
+
+		CBTServer.ServerReceiver.sendToAll("==============================================================");
+	}
+	
+	public static void quesPrint(DataInputStream in, DataOutputStream out) throws IOException {
+
+		ExamVO vo = selectQues();
+		String userAnswer;
+		out.writeUTF("=============================================================");
 		CBTServer.ServerReceiver.sendToAll(vo.getQwestion());// 문제
 		try {
 		Thread.sleep(3000);
@@ -119,6 +142,40 @@ public class MultiQuizRoom {
 		}
 		return examVO;
 	}
+	
+	public static ExamVO selectQues() {
+
+		if (JDBCConn.result == 0) {
+			JDBCConn.driverLoad();
+		}
+
+		ExamVO examVO = null;
+		try {
+			JDBCConn.conn = DriverManager.getConnection(JDBCConn.URL, JDBCConn.USER, JDBCConn.PASSWORD);
+
+			StringBuilder sql = new StringBuilder();
+			sql.append("SELECT *");
+			sql.append("  FROM (SELECT* FROM EXAM_INFO ");// 조인
+			sql.append("  ORDER BY DBMS_RANDOM.VALUE)" + "WHERE ROWNUM = 1");// 조인
+
+			JDBCConn.pstmt = JDBCConn.conn.prepareStatement(sql.toString());
+
+			JDBCConn.rs = JDBCConn.pstmt.executeQuery();
+
+			if (JDBCConn.rs.next()) {
+				examVO = new ExamVO(JDBCConn.rs.getString("QUESTION"), JDBCConn.rs.getString("ANSWER"),
+						JDBCConn.rs.getString("SECTION"), JDBCConn.rs.getString("EXAM_SEQNUM"),
+						JDBCConn.rs.getString("ANSWER_INFO"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			JDBCConn.closeConnStmtRs(JDBCConn.conn, JDBCConn.pstmt, JDBCConn.rs);
+		}
+		return examVO;
+	}
+	
+	
 
 	public static String keyword(String usrInput) {
 		String result = "0";

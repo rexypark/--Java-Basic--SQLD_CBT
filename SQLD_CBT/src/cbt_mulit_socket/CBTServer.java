@@ -65,7 +65,7 @@ public class CBTServer {
 	// 생생될 때 : 필드 clients 에 추가
 	// 종료될 때 : 필드 clients 에서 삭제 처리
 	public static class ServerReceiver extends Thread {
-		Socket socket;
+		Socket socket = null;
 		DataInputStream in; // 메세지를 읽을 때 사용
 		DataOutputStream out;;// 필드 clients에 등록 시 사용
 		String ip;
@@ -132,7 +132,7 @@ public class CBTServer {
 								AdminDAO.adminMain(in, out);
 								break;
 							}
-							clients.put(id, out);
+							
 							choiceRoom(in, out, id);
 						}
 					} else if (choice.equals("2")) {
@@ -191,11 +191,9 @@ public class CBTServer {
 			while (test) { // 문자열 유효성 검사
 				while (test1) {
 					if (LogRegex.isiInt(answer)) {
-						System.out.println("유효성 1");
 						test1 = false;
 						test2 = true;
 					} else {
-						System.out.println("유효성 1 - 1");
 						out.writeUTF("[Error] 숫자만 입력 가능합니다  \n  >>> 다시 입력해 주세요 : ");
 						answer = in.readUTF();
 					}
@@ -229,7 +227,6 @@ public class CBTServer {
 				if (choice.equals("1")) {
 					// 전체에게 접속한 사람 알림
 					sendToAll("#" + id + "님이 입장하셨습니다.");
-					System.out.println("id찍어볼꼐요~~" + id);
 					// ServerQuiz에 quizStart메소드에 dis in, dos out을 입력
 					// quiz방에 접속하고 모든 사람과 채팅 가능
 					// exit를 눌러야 break; 방을 빠져 나올 수 있다.
